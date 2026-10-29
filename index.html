@@ -49,7 +49,7 @@ function selectedPenalty(z){
   return effectivePenalties(z).reduce((sum,x)=>sum+x.seconds,0);
 }
 function penaltyLabel(z){
-  if(z.czas===null)return '';
+  if(z.czas===null)return [];
   const penalties=effectivePenalties(z);
   const limits=selectedLimits(z);
   const total=penalties.reduce((sum,x)=>sum+x.seconds,0);
