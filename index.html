@@ -45,6 +45,25 @@
 .rank-pill.gold{background:#e8b940;color:#151515}.rank-pill.silver{background:#c8cdd4;color:#151515}.rank-pill.bronze{background:#d39260;color:#151515}
 .season-hint{font-size:12px;color:#bfc5ce;margin:12px 0 18px}
 @media(max-width:650px){.view-tabs{gap:5px}.view-tab{padding:10px 3px}.season-group h3{font-size:15px}}
+
+/* AKR: tylko wyniki przewijane; górny kokpit pozostaje nieruchomy */
+html,body{height:100%;overflow:hidden}
+.wrap{height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
+.wrap>.sticky-top,.view-tabs{flex:0 0 auto}
+#rally-view{display:flex;flex-direction:column;flex:1 1 0;min-height:0;overflow:hidden}
+#rally-view[hidden],#season-view[hidden]{display:none!important}
+#rally-view>.sticky-top{position:relative;top:auto;flex:0 0 auto;z-index:2}
+#rally-view>.panel{flex:1 1 0;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;margin-bottom:0}
+#season-view{flex:1 1 0;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.wrap>.footer{display:none}
+@media(max-height:620px){
+ .wrap>.sticky-top .akr-logo{width:min(100%,170px)}
+ .wrap>.sticky-top .mast{padding:2px 0}
+ .wrap>.sticky-top .mast h1{font-size:15px}
+ .wrap>.sticky-top .mast small{display:none}
+ .view-tab{padding:5px 2px}
+ #rally-view>.sticky-top .panel{padding:5px 7px;margin-top:4px}
+}
 </style></head><body><main class="wrap"><div class="sticky-top"><header class="mast"><img class="akr-logo" src="logo-akr.png" alt="AKR ally team — Stowarzyszenie Rajdowe" width="1086" height="362"><h1>WYNIKI LIVE</h1><div id="nazwa-imprezy" class="event-name" hidden></div><small>OFICJALNY SYSTEM WYNIKÓW RAJDU</small><div class="status"><span class="dot"></span><span id="status">Łączenie z wynikami…</span></div></header>
 </div><nav class="view-tabs" aria-label="Wybór widoku"><button type="button" class="view-tab active" id="tab-rally" aria-pressed="true">🏁 AKTUALNY RAJD<small>Wyniki na żywo</small></button><button type="button" class="view-tab" id="tab-season" aria-pressed="false">🏆 KLASYFIKACJA SEZONU DBC 2026<small>Punktacja roczna cyklu</small></button></nav><div id="rally-view"><div class="sticky-top"><section class="panel" aria-label="Wybór wyników"><div class="filter-grid"><div><label class="label" for="wybor-os">ODCINEK SPECJALNY</label><select id="wybor-os"><option value="1">OS1</option><option value="2">OS2</option><option value="3">OS3</option><option value="4">OS4</option><option value="5">OS5</option><option value="6">OS6</option></select></div><div><label class="label" for="klasa">KLASA</label><select id="klasa"><option value="">Wszystkie klasy</option></select></div></div><div class="mode"><button type="button" id="na">WYNIK NA OS</button><button type="button" id="po">WYNIK PO OS</button></div></section></div>
 <section class="panel"><div class="toolbar"><h2 id="tytul">WYNIKI</h2><div class="note" id="meta">Oczekiwanie na dane</div></div><div id="blad" role="alert"></div><div class="results" id="tabela"><div class="empty">Ładowanie wyników…</div></div></section></div><section id="season-view" hidden aria-label="Klasyfikacja sezonu"><h2 class="season-title">🏆 KLASYFIKACJA SEZONU <em>DBC 2026</em></h2><div class="season-sub">DOBROCIN BARWACZ CUP • Punkty kierowców w rundach R1–R6</div><div id="season-filters" class="season-filters"></div><div id="season-results"></div><p class="season-hint">— oznacza brak wpisanych punktów. Dane sezonu są wpisane ręcznie; przed dekoracją należy zatwierdzić klasyfikację zgodnie z regulaminem.</p></section><footer class="footer">AKR • WYNIKI LIVE • Automatyczne odświeżanie co 30 sekund</footer></main>
