@@ -21,11 +21,11 @@
 @media(max-width:650px){.sticky-top .akr-logo{width:min(100%,275px)}.sticky-top .mast h1{font-size:17px}.sticky-top .mast small{font-size:8px;letter-spacing:1px}.sticky-top .panel{padding:7px}.filter-grid{gap:7px}.filter-grid select{font-size:13px;padding:8px 5px}.sticky-top .mode button{font-size:11px}}
 .event-name{font-size:clamp(12px,2.6vw,16px);font-weight:800;letter-spacing:.5px;line-height:1.25;margin:3px auto 4px;max-width:95%;overflow-wrap:anywhere;color:#fff}.event-name[hidden]{display:none}</style><style>
 /* DBC 2026: oddzielny widok, bez ingerencji w pomiary rajdu */
-.view-tabs{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:13px 0 0}
+.view-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:13px 0 0}
 .view-tab{background:#20242b;color:#eee;border:1px solid #484d57;border-radius:10px;padding:13px 8px;font-size:clamp(11px,2.3vw,16px);font-weight:900;cursor:pointer}
 .view-tab.active{background:#c91522;border-color:#ff3443;color:#fff}
 .view-tab small{display:block;font-size:10px;font-weight:400;opacity:.8;margin-top:2px}
-#season-view[hidden],#rally-view[hidden]{display:none!important}
+#startlist-view[hidden],#announcements-view[hidden],#rally-view[hidden]{display:none!important}
 .season-title{font-size:clamp(21px,4vw,34px);font-weight:900;margin:14px 0 3px;line-height:1.2}
 .season-title em{color:#f12a38;font-style:normal}.season-sub{color:#b7bbc4;font-size:13px;margin-bottom:16px}
 .season-filters{display:flex;flex-wrap:wrap;gap:7px;margin:13px 0}
@@ -44,17 +44,17 @@
 .rank-pill{display:inline-flex;align-items:center;justify-content:center;width:31px;height:29px;border-radius:5px;background:#27333d;font-weight:900}
 .rank-pill.gold{background:#e8b940;color:#151515}.rank-pill.silver{background:#c8cdd4;color:#151515}.rank-pill.bronze{background:#d39260;color:#151515}
 .season-hint{font-size:12px;color:#bfc5ce;margin:12px 0 18px}
-@media(max-width:650px){.view-tabs{gap:5px}.view-tab{padding:10px 3px}.season-group h3{font-size:15px}}
+@media(max-width:650px){.view-tabs{gap:5px}.view-tab{padding:10px 3px;font-size:11px}.view-tab small{font-size:9px}.season-group h3{font-size:15px}}
 
 /* AKR: tylko wyniki przewijane; górny kokpit pozostaje nieruchomy */
 html,body{height:100%;overflow:hidden}
 .wrap{height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
 .wrap>.sticky-top,.view-tabs{flex:0 0 auto}
 #rally-view{display:flex;flex-direction:column;flex:1 1 0;min-height:0;overflow:hidden}
-#rally-view[hidden],#season-view[hidden]{display:none!important}
+#rally-view[hidden],#startlist-view[hidden],#announcements-view[hidden]{display:none!important}
 #rally-view>.sticky-top{position:relative;top:auto;flex:0 0 auto;z-index:2}
 #rally-view>.panel{flex:1 1 0;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;margin-bottom:0}
-#season-view{flex:1 1 0;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+#startlist-view,#announcements-view{flex:1 1 0;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
 .wrap>.footer{display:none}
 @media(max-height:620px){
  .wrap>.sticky-top .akr-logo{width:min(100%,170px)}
@@ -67,9 +67,23 @@ html,body{height:100%;overflow:hidden}
 
 /* Plakat aktualnego rajdu — przewija się razem z wynikami */
 .event-poster{display:block;width:100%;max-width:760px;height:auto;margin:0 auto 18px;border-radius:10px;border:1px solid #393939}
+</style><style>
+/* Lista startowa i komunikaty — niezależne widoki, bez ingerencji w wyniki */
+.info-heading{font-size:clamp(20px,4vw,29px);font-weight:900;margin:18px 0 4px}
+.info-subtitle{font-size:12px;color:#bbb;margin:0 0 13px}
+.startlist-card,.announcement-card{border:1px solid #393939;border-radius:12px;background:#171717;margin:9px 0;padding:13px 15px}
+.startlist-card{display:grid;grid-template-columns:54px minmax(0,1fr);gap:13px;align-items:start}
+.startlist-number{background:#d71920;border-radius:9px;text-align:center;font-size:22px;font-weight:900;padding:8px 2px}
+.startlist-driver{font-size:16px;font-weight:900;overflow-wrap:anywhere}
+.startlist-pilot{font-size:13px;margin-top:3px;overflow-wrap:anywhere}
+.startlist-meta{font-size:12px;color:#bcbcbc;margin-top:5px;overflow-wrap:anywhere}
+.announcement-date{font-size:12px;color:#ff767b;font-weight:800}
+.announcement-title{font-size:18px;font-weight:900;margin:5px 0 7px;overflow-wrap:anywhere}
+.announcement-body{font-size:14px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}
+@media(max-width:390px){.view-tab{font-size:10px;padding:9px 2px}.view-tab small{font-size:8px}}
 </style></head><body><main class="wrap"><div class="sticky-top"><header class="mast"><img class="akr-logo" src="logo-akr.png" alt="AKR ally team — Stowarzyszenie Rajdowe" width="1086" height="362"><h1>WYNIKI LIVE</h1><div id="nazwa-imprezy" class="event-name" hidden></div><small>OFICJALNY SYSTEM WYNIKÓW RAJDU</small><div class="status"><span class="dot"></span><span id="status">Łączenie z wynikami…</span></div></header>
-</div><nav class="view-tabs" aria-label="Wybór widoku"><button type="button" class="view-tab active" id="tab-rally" aria-pressed="true">🏁 AKTUALNY RAJD<small>Wyniki na żywo</small></button><button type="button" class="view-tab" id="tab-season" aria-pressed="false">🏆 KLASYFIKACJA SEZONU DBC 2026<small>Punktacja roczna cyklu</small></button></nav><div id="rally-view"><div class="sticky-top"><section class="panel" aria-label="Wybór wyników"><div class="filter-grid"><div><label class="label" for="wybor-os">ODCINEK SPECJALNY</label><select id="wybor-os"><option value="1">OS1</option><option value="2">OS2</option><option value="3">OS3</option><option value="4">OS4</option><option value="5">OS5</option><option value="6">OS6</option></select></div><div><label class="label" for="klasa">KLASA</label><select id="klasa"><option value="">Wszystkie klasy</option></select></div></div><div class="mode"><button type="button" id="na">WYNIK NA OS</button><button type="button" id="po">WYNIK PO OS</button></div></section></div>
-<section class="panel"><img class="event-poster" src="plakat-aktualny-rajd.jpg" alt="KJS Jedziemy dla Wiktorii 2 — plakat aktualnego rajdu" width="1536" height="864" loading="lazy"><div class="toolbar"><h2 id="tytul">WYNIKI</h2><div class="note" id="meta">Oczekiwanie na dane</div></div><div id="blad" role="alert"></div><div class="results" id="tabela"><div class="empty">Ładowanie wyników…</div></div></section></div><section id="season-view" hidden aria-label="Klasyfikacja sezonu"><h2 class="season-title">🏆 KLASYFIKACJA SEZONU <em>DBC 2026</em></h2><div class="season-sub">DOBROCIN BARWACZ CUP • Punkty kierowców w rundach R1–R6</div><div id="season-filters" class="season-filters"></div><div id="season-results"></div><p class="season-hint">— oznacza brak wpisanych punktów. Dane sezonu są wpisane ręcznie; przed dekoracją należy zatwierdzić klasyfikację zgodnie z regulaminem.</p></section><footer class="footer">AKR • WYNIKI LIVE • Automatyczne odświeżanie co 30 sekund</footer></main>
+</div><nav class="view-tabs" aria-label="Wybór widoku"><button type="button" class="view-tab active" id="tab-rally" aria-pressed="true">🏁 WYNIKI LIVE<small>Wyniki rajdu</small></button><button type="button" class="view-tab" id="tab-startlist" aria-pressed="false">📋 LISTA STARTOWA<small>Załogi i pojazdy</small></button><button type="button" class="view-tab" id="tab-announcements" aria-pressed="false">📢 KOMUNIKATY<small>Informacje organizatora</small></button></nav><div id="rally-view"><div class="sticky-top"><section class="panel" aria-label="Wybór wyników"><div class="filter-grid"><div><label class="label" for="wybor-os">ODCINEK SPECJALNY</label><select id="wybor-os"><option value="1">OS1</option><option value="2">OS2</option><option value="3">OS3</option><option value="4">OS4</option><option value="5">OS5</option><option value="6">OS6</option></select></div><div><label class="label" for="klasa">KLASA</label><select id="klasa"><option value="">Wszystkie klasy</option></select></div></div><div class="mode"><button type="button" id="na">WYNIK NA OS</button><button type="button" id="po">WYNIK PO OS</button></div></section></div>
+<section class="panel"><img class="event-poster" src="plakat-aktualny-rajd.jpg" alt="KJS Jedziemy dla Wiktorii 2 — plakat aktualnego rajdu" width="1536" height="864" loading="lazy"><div class="toolbar"><h2 id="tytul">WYNIKI</h2><div class="note" id="meta">Oczekiwanie na dane</div></div><div id="blad" role="alert"></div><div class="results" id="tabela"><div class="empty">Ładowanie wyników…</div></div></section></div><section id="startlist-view" hidden aria-label="Lista startowa"><h2 class="info-heading">📋 LISTA STARTOWA</h2><p class="info-subtitle" id="startlist-meta">Oczekiwanie na dane załóg…</p><div id="startlist-results"><div class="empty">Ładowanie listy startowej…</div></div></section><section id="announcements-view" hidden aria-label="Komunikaty organizatora"><h2 class="info-heading">📢 KOMUNIKATY</h2><p class="info-subtitle">Oficjalne informacje organizatora rajdu</p><div id="announcements-results"><div class="empty">Ładowanie komunikatów…</div></div></section><footer class="footer">AKR • WYNIKI LIVE • Automatyczne odświeżanie co 30 sekund</footer></main>
 <script>
 'use strict';
 const API='https://script.google.com/macros/s/AKfycbwtcbpTmcDbpIlW7YtfmmWJXyyg1Tgp9M-LS5CepIfh4vtdoHHicTK3MdOQQkjs9Jxb/exec';
@@ -124,38 +138,34 @@ function selectedLimits(z){
 }
 function cancelledSelectedOS(rows){return rows.length>0&&rows.every(z=>parseRow(z)[os-1].cancelled)}
 function render(){$('wybor-os').value=String(os);['na','po'].forEach(x=>{$(x).classList.toggle('active',mode===x);$(x).setAttribute('aria-pressed',String(mode===x))});$('tytul').textContent=(mode==='na'?'WYNIK NA ':'WYNIK PO ')+`OS${os}`;if(!data)return;const k=$('klasa').value;if(mode==='na'&&cancelledSelectedOS(data.zalogi)){$('tabela').innerHTML=`<div class="cancelled-os"><strong>OS${os} — ODWOŁANY</strong><span>Odcinek specjalny został odwołany. Wyniki pozostałych odcinków są dostępne.</span></div>`;$('meta').textContent='Odcinek odwołany • odświeżanie 30 s';return}let a=data.zalogi.filter(z=>(!k||z.klasa===k)).map(z=>({...z,czas:selectedTime(z),kara:selectedPenalty(z),naTrasie:selectedOnRoute(z)}));a.sort((x,y)=>(x.czas===null?Infinity:x.czas)-(y.czas===null?Infinity:y.czas)||Number(x.nr)-Number(y.nr));const leader=a.find(x=>x.czas!==null)?.czas??null;let pos=0,prev=null,place=0;const html=a.map(z=>{if(z.czas!==null){pos++;if(prev===null||Math.abs(prev-z.czas)>.00001)place=pos;prev=z.czas}const rank=z.czas===null?'—':place;const diff=z.czas===null||leader===null?'':z.czas===leader?'':('STRATA +'+fmt(z.czas-leader));const medal=rank===1?'gold':rank===2?'silver':rank===3?'bronze':'other';const limits=z.czas!==null?selectedLimits(z):[];const hasPenalty=z.czas!==null&&z.kara>0;const labels=penaltyLabel(z);const raw=hasPenalty?fmt(z.czas-z.kara):'';const showBreakdown=hasPenalty;return `<article class="crew"><div class="position ${medal}">${rank}</div><div class="crew-info"><div class="driver">${esc(z.kierowca)}</div><div class="pilot">${esc(z.pilot)}</div><div class="car">${esc(z.samochod)}</div><div class="crew-nr">NR ${esc(z.nr)}</div>${labels.map(label=>`<div class="penalty-label">${esc(label)}</div>`).join('')}</div><div class="crew-time">${showBreakdown?`<div class="raw-time">${raw}</div><div class="penalty-time">+${fmt(z.kara)}</div>`:''}<div class="final-time">${z.czas===null&&z.naTrasie?'<span class="on-route">🏎️ NA TRASIE</span>':fmt(z.czas)}</div><div class="result-caption">${z.czas===null&&z.naTrasie?'STATUS':'WYNIK'}</div>${diff?`<div class="time-gap">${diff}</div>`:''}</div></article>`}).join('');$('tabela').innerHTML=html||'<div class="empty">Brak załóg dla wybranych filtrów</div>';$('meta').textContent=`${a.length} załóg • odświeżanie 30 s`}
-function setData(d){if(!d||!d.ok||!Array.isArray(d.zalogi))throw Error('API nie zwróciło prawidłowych danych');data=d;const eventName=String(d.nazwa_imprezy??'').trim();$('nazwa-imprezy').textContent=eventName;$('nazwa-imprezy').hidden=!eventName;const old=$('klasa').value;const classes=[...new Set(d.zalogi.map(z=>String(z.klasa||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pl',{numeric:true}));$('klasa').innerHTML='<option value="">Wszystkie klasy</option>'+classes.map(k=>`<option value="${esc(k)}">${esc(k)}</option>`).join('');$('klasa').value=classes.includes(old)?old:'';$('status').textContent='Wyniki połączone • '+new Date().toLocaleTimeString('pl-PL');$('blad').innerHTML='';render()}
+function setData(d){if(!d||!d.ok||!Array.isArray(d.zalogi))throw Error('API nie zwróciło prawidłowych danych');data=d;const eventName=String(d.nazwa_imprezy??'').trim();$('nazwa-imprezy').textContent=eventName;$('nazwa-imprezy').hidden=!eventName;const old=$('klasa').value;const classes=[...new Set(d.zalogi.map(z=>String(z.klasa||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pl',{numeric:true}));$('klasa').innerHTML='<option value="">Wszystkie klasy</option>'+classes.map(k=>`<option value="${esc(k)}">${esc(k)}</option>`).join('');$('klasa').value=classes.includes(old)?old:'';$('status').textContent='Wyniki połączone • '+new Date().toLocaleTimeString('pl-PL');$('blad').innerHTML='';render();renderStartlist();renderAnnouncements()}
 function load(){if(busy)return;busy=true;const id=++seq,cb='AKRcallback_'+id+'_'+Date.now(),s=document.createElement('script');let finished=false;const timeout=setTimeout(()=>finish(new Error('Brak odpowiedzi API')),15000);function finish(err,payload){if(finished)return;finished=true;clearTimeout(timeout);delete window[cb];s.remove();busy=false;try{if(err)throw err;setData(payload)}catch(e){$('status').textContent='Brak połączenia • ponawiam za 30 s';$('blad').innerHTML='<div class="error">Nie udało się odświeżyć wyników. '+(data?'Wyświetlane są ostatnio pobrane dane.':'Sprawdź wdrożenie API i połączenie internetowe.')+'</div>'}}window[cb]=d=>finish(null,d);s.onerror=()=>finish(new Error('Błąd pobierania'));s.src=API+'?callback='+encodeURIComponent(cb)+'&t='+Date.now();document.head.appendChild(s)}
 $('wybor-os').onchange=()=>{os=Number($('wybor-os').value);render()};$('na').onclick=()=>{mode='na';render()};$('po').onclick=()=>{mode='po';render()};$('klasa').onchange=render;render();load();setInterval(load,30000);
 </script><script>
 'use strict';
-// TYLKO KLASYCZNE DANE SEZONU — uzupełnij R6 po zatwierdzeniu wyników finału.
-const DBC_SEASON_DATA={"Klasa 1":[["Patryk Libera",10,10,10,10,10,null],["Foltyn Arkadiusz",8,6,6,5,4,null],["Jarosław Niedzwiedz",5,8,null,2,5,null]],"Klasa 2":[["Mateusz Iwaszkiewicz",8,6,5,8,4,null],["Patryk Lasek",null,null,10,10,10,null],["Krzysztof Zagórski",10,null,6,6,6,null],["Wiktor Smoliński",2,null,2,4,8,null],["Andrzej Englert",3,null,3,5,null,null],["Michał Sarnowski",1,null,null,1,2,null]],"Klasa 3":[["Jakub Dzikowski",null,8,8,10,6,null],["Adam Puszka",6,4,3,2,10,null],["Martin Martin",null,10,10,4,null,null],["Gabriela Sokołowska",10,2,5,5,null,null],["Mariusz Koziarski",null,6,null,8,4,null],["Wiktoria Mruk",5,1,1,null,null,null]],"Klasa 4":[["Dawid Jurasik",8,4,10,10,6,null],["Aleksander Ćwirko",6,6,null,6,10,null],["Michał Sidorowicz",10,8,null,8,null,null],["Artur Maziarz",null,null,4,5,8,null]],"Klasa 5":[["Maciek Lorens",10,10,8,8,8,null],["Krystian Stepien",8,null,10,5,10,null],["Mariusz Mazur",6,8,null,4,6,null],["Mateusz Partyka",null,null,6,6,5,null]],"Klasa 6":[["AWERS",6,8,6,8,8,null],["Krzysztof Tadla",10,10,null,6,1,null],["Mateusz Linkowski",8,6,5,3,0,null],["Dawid Grabiec",4,5,1,null,6,null],["Paweł Małachowski",3,null,2,4,null,null],["Michał Olechowski",2,null,4,1,null,null]],"Klasa Junior":[["Igor Balant",5,10,10,10,null,null],["Sławomir Madzia",4,8,8,6,null,null],["Dominik Błanik",8,4,3,4,null,null],["Martyna Błanik",6,5,null,3,null,null],["Marcin Koziarski",null,3,null,5,6,null]]};
-const seasonEsc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let dbcClass='all';
-function renderSeason(){
- const filters=document.getElementById('season-filters');
- filters.innerHTML=[['all','Wszystkie klasy'],...Object.keys(DBC_SEASON_DATA).map(k=>[k,k])].map(([key,label])=>'<button type="button" data-dbc="'+seasonEsc(key)+'" class="'+(key===dbcClass?'active':'')+'">'+seasonEsc(label)+'</button>').join('');
- filters.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{dbcClass=b.dataset.dbc;renderSeason()}));
- const names=dbcClass==='all'?Object.keys(DBC_SEASON_DATA):[dbcClass];
- document.getElementById('season-results').innerHTML=names.map((name,i)=>{
-  const ranked=DBC_SEASON_DATA[name].map((row,index)=>({name:row[0],scores:row.slice(1),total:row.slice(1).reduce((a,b)=>a+(b??0),0),index})).sort((a,b)=>b.total-a.total||a.index-b.index);
-  let previous=null,place=0;
-  const body=ranked.map((r,index)=>{if(previous===null||r.total!==previous)place=index+1;previous=r.total;
-   const medal=place===1?'gold':place===2?'silver':place===3?'bronze':'';
-   return '<tr><td><span class="rank-pill '+medal+'">'+place+'</span></td><td class="driver-col">'+seasonEsc(r.name)+'</td>'+r.scores.map(p=>'<td class="score">'+(p===null?'—':p)+'</td>').join('')+'<td class="total">'+r.total+'</td></tr>';}).join('');
-  return '<section class="season-group"><h3>'+seasonEsc(name.toUpperCase())+'</h3><div class="season-scroll"><table class="season-table"><thead><tr><th>Miejsce</th><th class="driver-col">Kierowca</th><th>R1</th><th>R2</th><th>R3</th><th>R4</th><th>R5</th><th>R6</th><th>Suma</th></tr></thead><tbody>'+body+'</tbody></table></div></section>';
- }).join('');
+function renderStartlist(){
+ const target=document.getElementById('startlist-results');
+ if(!data)return;
+ const rows=[...data.zalogi].sort((a,b)=>Number(a.nr)-Number(b.nr));
+ document.getElementById('startlist-meta').textContent=rows.length+' załóg • kolejność według numeru startowego';
+ target.innerHTML=rows.map(z=>'<article class="startlist-card"><div class="startlist-number">'+esc(z.nr)+'</div><div><div class="startlist-driver">'+esc(z.kierowca)+'</div><div class="startlist-pilot">Pilot: '+esc(z.pilot)+'</div><div class="startlist-meta">'+esc(z.samochod)+' • '+esc(z.klasa)+'</div></div></article>').join('')||'<div class="empty">Brak załóg na liście startowej.</div>';
+}
+function renderAnnouncements(){
+ const target=document.getElementById('announcements-results');
+ if(!data)return;
+ const items=Array.isArray(data.komunikaty)?data.komunikaty:[];
+ target.innerHTML=items.map(k=>'<article class="announcement-card"><div class="announcement-date">'+esc([k.data,k.godzina].filter(Boolean).join(' • '))+'</div><h3 class="announcement-title">'+esc(k.tytul)+'</h3><div class="announcement-body">'+esc(k.tresc)+'</div></article>').join('')||'<div class="empty">Brak opublikowanych komunikatów.</div>';
 }
 function selectAkrView(view){
- const season=view==='season';
- document.getElementById('season-view').hidden=!season;
- document.getElementById('rally-view').hidden=season;
- for(const [id,active] of [['tab-rally',!season],['tab-season',season]]){
-  const b=document.getElementById(id);b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));
+ for(const name of ['rally','startlist','announcements']){
+  const active=name===view;
+  document.getElementById(name+'-view').hidden=!active;
+  const tab=document.getElementById('tab-'+name);
+  tab.classList.toggle('active',active);
+  tab.setAttribute('aria-pressed',String(active));
  }
 }
-document.getElementById('tab-rally').addEventListener('click',()=>selectAkrView('rally'));
-document.getElementById('tab-season').addEventListener('click',()=>selectAkrView('season'));
-renderSeason();
+for(const name of ['rally','startlist','announcements']){
+ document.getElementById('tab-'+name).addEventListener('click',()=>selectAkrView(name));
+}
 </script></body></html>
