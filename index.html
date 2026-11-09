@@ -2,7 +2,13 @@
 <html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#0b0b0b"><title>AKR | WYNIKI LIVE</title>
 <style>
 :root{color-scheme:dark;--bg:#090909;--panel:#171717;--red:#d71920;--white:#fff;--line:#393939}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--white);font:15px/1.5 Arial,Helvetica,sans-serif}.wrap{max-width:1150px;margin:auto;padding:18px}.mast{text-align:center;padding:22px 0 20px;border-bottom:3px solid var(--red)}.logo{display:inline-block;background:var(--red);color:#fff;padding:5px 30px;border-radius:10px;font-size:52px;line-height:1.2;font-weight:900;letter-spacing:4px}.mast h1{margin:10px 0 0;font-size:30px;letter-spacing:2px}.mast small{font-size:11px;letter-spacing:2px}.status{margin-top:10px;font-size:12px}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--red);margin-right:5px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;margin:18px 0}.label{font-size:12px;font-weight:800;letter-spacing:1px;margin:0 0 9px}.osrow{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:7px}.osrow button,.mode button{padding:12px 3px;background:#262626;border:1px solid #444;color:white;border-radius:8px;font-size:14px;font-weight:800;cursor:pointer}.osrow button.active,.mode button.active{background:var(--red);border-color:var(--red)}select,input{width:100%;background:#252525;color:white;border:1px solid #555;border-radius:8px;padding:13px;font-size:15px}.controls{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}.mode{display:grid;grid-template-columns:1fr 1fr;gap:8px}.toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.toolbar h2{margin:0;font-size:20px}.note{color:#ccc;font-size:12px}.tablewrap{overflow:visible}table{border-collapse:collapse;width:100%;min-width:620px}th{text-align:left;color:#fff;background:#282828;font-size:12px;letter-spacing:.6px}td,th{padding:12px 10px;border-bottom:1px solid #393939}td.time{font-size:18px;font-weight:900;white-space:nowrap}td.pos{font-weight:900;color:#fff;width:55px}td.nr{font-weight:900;color:#fff;width:65px}.sub{font-size:12px;color:#ccc}.gap{font-size:12px;color:#ccc}.penalty{display:block;color:#ff5258;font-size:12px;font-weight:800;white-space:nowrap}.breakdown{display:block;color:#bbb;font-size:11px;font-weight:400;white-space:nowrap}.penalty strong{color:#fff}tr:hover td{background:#222}.empty{text-align:center;padding:35px;color:#ccc}.error{border-left:4px solid var(--red);padding:12px;background:#271010;margin:14px 0}.footer{text-align:center;font-size:12px;color:#bbb;padding:24px}button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid white;outline-offset:2px}@media(max-width:650px){.wrap{padding:10px}.logo{font-size:43px}.mast h1{font-size:24px}.panel{padding:12px}.controls{grid-template-columns:1fr}.osrow{gap:4px}.osrow button{font-size:12px;padding:12px 0}.toolbar h2{font-size:18px}}
-.akr-logo{display:block;width:min(100%,540px);height:auto;margin:0 auto 8px;object-fit:contain}</style><style>
+.akr-logo{display:block;width:min(100%,540px);height:auto;margin:0 auto 8px;object-fit:contain}
+/* Przełącznik rajdów: minimalna wysokość na iPhone */
+.akr-event-picker{display:flex;align-items:center;gap:8px;padding:4px 7px 5px;background:#000}
+.akr-event-picker label{color:#f1f1f1;font-size:10px;font-weight:800;white-space:nowrap;letter-spacing:.3px}
+.akr-event-picker select{flex:1;min-width:0;max-width:100%;border:1px solid #8c2229;background:#181818;color:white;border-radius:7px;padding:7px 6px;font-size:12px;font-weight:750}
+@media(max-width:420px){.akr-event-picker{gap:5px}.akr-event-picker label{font-size:9px}.akr-event-picker select{font-size:11px;padding:6px 4px}}
+</style><style>
 .results{margin-top:14px}.crew{display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:11px;align-items:center;padding:14px 2px;border-bottom:1px solid #393939;min-width:0}.position{width:36px;height:42px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:18px;color:#111}.position.gold{background:#e7ba45}.position.silver{background:#c9cdd2}.position.bronze{background:#c58a59}.position.other{background:#fff}.crew-info{min-width:0;overflow-wrap:anywhere}.driver{font-size:15px;font-weight:800;line-height:1.25}.pilot{font-size:13px;line-height:1.3;margin-top:3px}.car{font-size:11px;color:#bdbdbd;line-height:1.3;margin-top:3px}.crew-nr{font-size:10px;color:#aaa;margin-top:4px}.penalty-label{font-size:11px;font-weight:800;color:#ff5b5b;margin-top:5px;overflow-wrap:anywhere;white-space:normal}.crew-time{text-align:right;min-width:91px;white-space:nowrap;font-variant-numeric:tabular-nums}.raw-time{font-size:12px;color:#c9c9c9}.penalty-time{font-size:12px;font-weight:800;color:#ff5b5b}.final-time{font-size:17px;font-weight:900;letter-spacing:-.3px}.result-caption{font-size:9px;color:#aaa;letter-spacing:1px}.time-gap{font-size:10px;color:#bdbdbd;margin-top:4px}.on-route{display:inline-block;color:#86efac;font-size:12px;font-weight:900;letter-spacing:.25px;white-space:nowrap}.cancelled-os{border:1px solid #a63b3b;background:#271313;border-radius:12px;padding:34px 18px;text-align:center;margin-top:12px}.cancelled-os strong{display:block;font-size:clamp(22px,5vw,34px);color:#ff6868;letter-spacing:1px}.cancelled-os span{display:block;margin-top:8px;font-size:13px;color:#ddd}.on-route-note{font-size:9px;color:#aaa;letter-spacing:.6px;margin-top:3px}@media(max-width:390px){.wrap{padding:7px}.panel{padding:10px}.crew{grid-template-columns:34px minmax(0,1fr) auto;gap:7px}.position{width:31px;height:37px}.driver{font-size:13px}.pilot{font-size:12px}.crew-time{min-width:78px}.final-time{font-size:15px}.time-gap{font-size:9px}}
 </style><style>
 /* Staly, przyklejony naglowek: logo i filtry */
@@ -81,12 +87,60 @@ html,body{height:100%;overflow:hidden}
 .announcement-title{font-size:18px;font-weight:900;margin:5px 0 7px;overflow-wrap:anywhere}
 .announcement-body{font-size:14px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}
 @media(max-width:390px){.view-tab{font-size:10px;padding:9px 2px}.view-tab small{font-size:8px}}
-</style></head><body><main class="wrap"><div class="sticky-top"><header class="mast"><img class="akr-logo" src="logo-akr.png" alt="AKR ally team — Stowarzyszenie Rajdowe" width="1086" height="362"><h1>WYNIKI LIVE</h1><div id="nazwa-imprezy" class="event-name" hidden></div><small>OFICJALNY SYSTEM WYNIKÓW RAJDU</small><div class="status"><span class="dot"></span><span id="status">Łączenie z wynikami…</span></div></header>
-</div><nav class="view-tabs" aria-label="Wybór widoku"><button type="button" class="view-tab active" id="tab-rally" aria-pressed="true">🏁 WYNIKI LIVE<small>Wyniki rajdu</small></button><button type="button" class="view-tab" id="tab-startlist" aria-pressed="false">📋 LISTA STARTOWA<small>Załogi i pojazdy</small></button><button type="button" class="view-tab" id="tab-announcements" aria-pressed="false">📢 KOMUNIKATY<small>Informacje organizatora</small></button></nav><div id="rally-view"><div class="sticky-top"><section class="panel" aria-label="Wybór wyników"><div class="filter-grid"><div><label class="label" for="wybor-os">ODCINEK SPECJALNY</label><select id="wybor-os"><option value="1">OS1</option><option value="2">OS2</option><option value="3">OS3</option><option value="4">OS4</option><option value="5">OS5</option><option value="6">OS6</option></select></div><div><label class="label" for="klasa">KLASA</label><select id="klasa"><option value="">Wszystkie klasy</option></select></div></div><div class="mode"><button type="button" id="na">WYNIK NA OS</button><button type="button" id="po">WYNIK PO OS</button></div></section></div>
+</style><style>
+/* AKR: powiadomienia o nowych komunikatach */
+.akr-notice-overlay[hidden]{display:none!important}
+.akr-notice-overlay{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.82);display:flex;align-items:center;justify-content:center;padding:18px}
+.akr-notice-dialog{background:#171717;border:2px solid #d71920;border-radius:16px;width:min(100%,520px);max-height:85dvh;overflow:auto;padding:22px;box-shadow:0 15px 65px #000;color:#fff}
+.akr-notice-dialog h2{margin:0 0 12px;font-size:23px}.akr-notice-date{color:#ff7d83;font-size:12px;font-weight:800}
+.akr-notice-title{font-size:20px;font-weight:900;margin:8px 0}.akr-notice-body{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.55}
+.akr-notice-ok{width:100%;margin-top:20px;padding:14px;background:#d71920;border:0;border-radius:9px;color:#fff;font-size:16px;font-weight:900;cursor:pointer}
+</style><style>
+
+/* AKR 2026: WYŁĄCZNIE ZMIANY WIZUALNE — bez zmian w JavaScript */
+:root{--bg:#000}
+html,body{background:#000}
+.wrap{padding:6px 9px 8px}
+.wrap>.sticky-top{background:#000;box-shadow:0 3px 8px rgba(0,0,0,.55);padding:0}
+.wrap>.sticky-top .mast{padding:2px 0 3px;background:#000;border-bottom:1px solid #a9141b}
+.wrap>.sticky-top .akr-logo{display:block;width:min(100%,310px);height:auto;margin:0 auto;object-fit:contain}
+.wrap>.sticky-top .mast h1,.wrap>.sticky-top .mast small{display:none!important}
+/* Nazwa imprezy pochodzi wyłącznie z API Google, bez zmiany JS */
+.wrap>.sticky-top .event-name{display:block!important;margin:3px auto 4px;padding:2px 8px;max-width:100%;font-family:Arial,Helvetica,sans-serif;font-size:clamp(14px,3.6vw,20px);font-weight:900;line-height:1.2;letter-spacing:.45px;text-align:center;text-transform:uppercase;color:#fff;text-shadow:0 1px 0 #8d1119;overflow-wrap:anywhere}
+.wrap>.sticky-top .event-name[hidden]{display:none!important}
+.wrap>.sticky-top .status{margin:0;font-size:10px;line-height:1.2}
+.view-tabs{margin:5px 0 0;gap:4px}
+.view-tab{padding:7px 2px;border-radius:7px;font-size:clamp(10px,2.5vw,13px);line-height:1.15}
+.view-tab small{display:none}
+#rally-view>.sticky-top .panel{margin:5px 0 0;padding:6px 8px;border-radius:10px}
+.filter-grid{gap:7px}
+.filter-grid .label{font-size:10px;margin-bottom:2px;letter-spacing:.5px}
+.filter-grid select{padding:6px 7px;font-size:13px;min-height:34px}
+#rally-view>.sticky-top .mode{margin-top:5px;gap:5px}
+#rally-view>.sticky-top .mode button{padding:6px 2px;font-size:11px;min-height:32px}
+#rally-view>.panel{margin-top:6px;padding:9px 11px}
+#rally-view .toolbar h2{font-size:17px}
+#rally-view .toolbar{gap:4px}
+#rally-view .results{margin-top:6px}
+#rally-view .crew{padding:9px 2px;gap:8px}
+/* Plakat nie zajmuje pierwszego ekranu; pozostaje w HTML i może wrócić później */
+#rally-view .event-poster{display:none}
+@media(max-width:650px){
+ .wrap{padding:3px 7px 5px}
+ .wrap>.sticky-top .akr-logo{width:min(100%,280px)}
+ .view-tab{padding:7px 2px;font-size:10px}
+ #rally-view>.panel{padding:8px 9px}
+ #rally-view .crew{padding:8px 1px}
+}
+@media(max-height:680px){.wrap>.sticky-top .akr-logo{width:min(100%,220px)}.view-tab{padding:5px 2px}}
+</style></head><body><main class="wrap"><div class="sticky-top"><header class="mast"><img class="akr-logo" src="akr-logo-stoper.png" alt="AKR ally team — Stowarzyszenie Rajdowe" width="1086" height="362"><h1>WYNIKI LIVE</h1><div id="nazwa-imprezy" class="event-name" hidden></div><small>OFICJALNY SYSTEM WYNIKÓW RAJDU</small><div class="status"><span class="dot"></span><span id="status">Łączenie z wynikami…</span></div></header><div class="akr-event-picker"><label for="akr-event-select">🏁 WYBIERZ IMPREZĘ</label><select id="akr-event-select" aria-label="Wybierz imprezę"><option value="live">🔴 AKTUALNY RAJD — LIVE</option><option value="archive-wiktoria">📁 ARCHIWUM — pobieranie nazwy…</option></select></div>
+</div><nav class="view-tabs" aria-label="Wybór widoku"><button type="button" class="view-tab active" id="tab-rally" aria-pressed="true">🏁 WYNIKI LIVE<small>Wyniki rajdu</small></button><button type="button" class="view-tab" id="tab-startlist" aria-pressed="false">📋 LISTA STARTOWA<small>Załogi i pojazdy</small></button><button type="button" class="view-tab" id="tab-announcements" aria-pressed="false">📢 KOMUNIKATY<small>Informacje organizatora</small></button></nav><div id="rally-view"><div class="sticky-top"><section class="panel" aria-label="Wybór wyników"><div class="filter-grid"><div><label class="label" for="wybor-os">ODCINEK SPECJALNY</label><select id="wybor-os"><option value="1">OS1</option><option value="2">OS2</option><option value="3">OS3</option><option value="4">OS4</option><option value="5">OS5</option><option value="6">OS6</option></select></div><div><label class="label" for="klasa">KLASA</label><select id="klasa"><option value="">GENERALKA</option></select></div></div><div class="mode"><button type="button" id="na">WYNIK NA OS</button><button type="button" id="po">WYNIK PO OS</button></div></section></div>
 <section class="panel"><img class="event-poster" src="plakat-aktualny-rajd.jpg" alt="KJS Jedziemy dla Wiktorii 2 — plakat aktualnego rajdu" width="1536" height="864" loading="lazy"><div class="toolbar"><h2 id="tytul">WYNIKI</h2><div class="note" id="meta">Oczekiwanie na dane</div></div><div id="blad" role="alert"></div><div class="results" id="tabela"><div class="empty">Ładowanie wyników…</div></div></section></div><section id="startlist-view" hidden aria-label="Lista startowa"><h2 class="info-heading">📋 LISTA STARTOWA</h2><p class="info-subtitle" id="startlist-meta">Oczekiwanie na dane załóg…</p><div id="startlist-results"><div class="empty">Ładowanie listy startowej…</div></div></section><section id="announcements-view" hidden aria-label="Komunikaty organizatora"><h2 class="info-heading">📢 KOMUNIKATY</h2><p class="info-subtitle">Oficjalne informacje organizatora rajdu</p><div id="announcements-results"><div class="empty">Ładowanie komunikatów…</div></div></section><footer class="footer">AKR • WYNIKI LIVE • Automatyczne odświeżanie co 30 sekund</footer></main>
 <script>
 'use strict';
 const API='https://script.google.com/macros/s/AKfycbwtcbpTmcDbpIlW7YtfmmWJXyyg1Tgp9M-LS5CepIfh4vtdoHHicTK3MdOQQkjs9Jxb/exec';
+const ARCHIVE_API='https://script.google.com/macros/s/AKfycbx9ac_5Lw7w6Cf_qCzOoXhTSHAVRRfUsSiHBN-uacuF_swRZVAZrFwga_CVoDnLFvGc/exec';
+let selectedEvent='live', eventGeneration=0;
 let data=null,os=1,mode='po',busy=false,seq=0;
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -137,10 +191,88 @@ function selectedLimits(z){
   }).map(name=>String(name).trim().toUpperCase());
 }
 function cancelledSelectedOS(rows){return rows.length>0&&rows.every(z=>parseRow(z)[os-1].cancelled)}
-function render(){$('wybor-os').value=String(os);['na','po'].forEach(x=>{$(x).classList.toggle('active',mode===x);$(x).setAttribute('aria-pressed',String(mode===x))});$('tytul').textContent=(mode==='na'?'WYNIK NA ':'WYNIK PO ')+`OS${os}`;if(!data)return;const k=$('klasa').value;if(mode==='na'&&cancelledSelectedOS(data.zalogi)){$('tabela').innerHTML=`<div class="cancelled-os"><strong>OS${os} — ODWOŁANY</strong><span>Odcinek specjalny został odwołany. Wyniki pozostałych odcinków są dostępne.</span></div>`;$('meta').textContent='Odcinek odwołany • odświeżanie 30 s';return}let a=data.zalogi.filter(z=>(!k||z.klasa===k)).map(z=>({...z,czas:selectedTime(z),kara:selectedPenalty(z),naTrasie:selectedOnRoute(z)}));a.sort((x,y)=>(x.czas===null?Infinity:x.czas)-(y.czas===null?Infinity:y.czas)||Number(x.nr)-Number(y.nr));const leader=a.find(x=>x.czas!==null)?.czas??null;let pos=0,prev=null,place=0;const html=a.map(z=>{if(z.czas!==null){pos++;if(prev===null||Math.abs(prev-z.czas)>.00001)place=pos;prev=z.czas}const rank=z.czas===null?'—':place;const diff=z.czas===null||leader===null?'':z.czas===leader?'':('STRATA +'+fmt(z.czas-leader));const medal=rank===1?'gold':rank===2?'silver':rank===3?'bronze':'other';const limits=z.czas!==null?selectedLimits(z):[];const hasPenalty=z.czas!==null&&z.kara>0;const labels=penaltyLabel(z);const raw=hasPenalty?fmt(z.czas-z.kara):'';const showBreakdown=hasPenalty;return `<article class="crew"><div class="position ${medal}">${rank}</div><div class="crew-info"><div class="driver">${esc(z.kierowca)}</div><div class="pilot">${esc(z.pilot)}</div><div class="car">${esc(z.samochod)}</div><div class="crew-nr">NR ${esc(z.nr)}</div>${labels.map(label=>`<div class="penalty-label">${esc(label)}</div>`).join('')}</div><div class="crew-time">${showBreakdown?`<div class="raw-time">${raw}</div><div class="penalty-time">+${fmt(z.kara)}</div>`:''}<div class="final-time">${z.czas===null&&z.naTrasie?'<span class="on-route">🏎️ NA TRASIE</span>':fmt(z.czas)}</div><div class="result-caption">${z.czas===null&&z.naTrasie?'STATUS':'WYNIK'}</div>${diff?`<div class="time-gap">${diff}</div>`:''}</div></article>`}).join('');$('tabela').innerHTML=html||'<div class="empty">Brak załóg dla wybranych filtrów</div>';$('meta').textContent=`${a.length} załóg • odświeżanie 30 s`}
-function setData(d){if(!d||!d.ok||!Array.isArray(d.zalogi))throw Error('API nie zwróciło prawidłowych danych');data=d;const eventName=String(d.nazwa_imprezy??'').trim();$('nazwa-imprezy').textContent=eventName;$('nazwa-imprezy').hidden=!eventName;const old=$('klasa').value;const classes=[...new Set(d.zalogi.map(z=>String(z.klasa||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pl',{numeric:true}));$('klasa').innerHTML='<option value="">Wszystkie klasy</option>'+classes.map(k=>`<option value="${esc(k)}">${esc(k)}</option>`).join('');$('klasa').value=classes.includes(old)?old:'';$('status').textContent='Wyniki połączone • '+new Date().toLocaleTimeString('pl-PL');$('blad').innerHTML='';render();renderStartlist();renderAnnouncements()}
-function load(){if(busy)return;busy=true;const id=++seq,cb='AKRcallback_'+id+'_'+Date.now(),s=document.createElement('script');let finished=false;const timeout=setTimeout(()=>finish(new Error('Brak odpowiedzi API')),15000);function finish(err,payload){if(finished)return;finished=true;clearTimeout(timeout);delete window[cb];s.remove();busy=false;try{if(err)throw err;setData(payload)}catch(e){$('status').textContent='Brak połączenia • ponawiam za 30 s';$('blad').innerHTML='<div class="error">Nie udało się odświeżyć wyników. '+(data?'Wyświetlane są ostatnio pobrane dane.':'Sprawdź wdrożenie API i połączenie internetowe.')+'</div>'}}window[cb]=d=>finish(null,d);s.onerror=()=>finish(new Error('Błąd pobierania'));s.src=API+'?callback='+encodeURIComponent(cb)+'&t='+Date.now();document.head.appendChild(s)}
-$('wybor-os').onchange=()=>{os=Number($('wybor-os').value);render()};$('na').onclick=()=>{mode='na';render()};$('po').onclick=()=>{mode='po';render()};$('klasa').onchange=render;render();load();setInterval(load,30000);
+function render(){$('wybor-os').value=String(os);['na','po'].forEach(x=>{$(x).classList.toggle('active',mode===x);$(x).setAttribute('aria-pressed',String(mode===x))});$('tytul').textContent=(mode==='na'?'WYNIK NA ':'WYNIK PO ')+`OS${os}`;if(!data)return;const k=$('klasa').value;if(mode==='na'&&cancelledSelectedOS(data.zalogi)){$('tabela').innerHTML=`<div class="cancelled-os"><strong>OS${os} — ODWOŁANY</strong><span>Odcinek specjalny został odwołany. Wyniki pozostałych odcinków są dostępne.</span></div>`;$('meta').textContent='Odcinek odwołany • '+(selectedEvent==='live'?'odświeżanie 30 s':'wyniki archiwalne');return}let a=data.zalogi.filter(z=>(!k||z.klasa===k)).map(z=>({...z,czas:selectedTime(z),kara:selectedPenalty(z),naTrasie:selectedOnRoute(z)}));a.sort((x,y)=>(x.czas===null?Infinity:x.czas)-(y.czas===null?Infinity:y.czas)||Number(x.nr)-Number(y.nr));const leader=a.find(x=>x.czas!==null)?.czas??null;let pos=0,prev=null,place=0;const html=a.map(z=>{if(z.czas!==null){pos++;if(prev===null||Math.abs(prev-z.czas)>.00001)place=pos;prev=z.czas}const rank=z.czas===null?'—':place;const diff=z.czas===null||leader===null?'':z.czas===leader?'':('STRATA +'+fmt(z.czas-leader));const medal=rank===1?'gold':rank===2?'silver':rank===3?'bronze':'other';const limits=z.czas!==null?selectedLimits(z):[];const hasPenalty=z.czas!==null&&z.kara>0;const labels=penaltyLabel(z);const raw=hasPenalty?fmt(z.czas-z.kara):'';const showBreakdown=hasPenalty;return `<article class="crew"><div class="position ${medal}">${rank}</div><div class="crew-info"><div class="driver">${esc(z.kierowca)}</div><div class="pilot">${esc(z.pilot)}</div><div class="car">${esc(z.samochod)}</div><div class="crew-nr">NR ${esc(z.nr)}</div>${labels.map(label=>`<div class="penalty-label">${esc(label)}</div>`).join('')}</div><div class="crew-time">${showBreakdown?`<div class="raw-time">${raw}</div><div class="penalty-time">+${fmt(z.kara)}</div>`:''}<div class="final-time">${z.czas===null&&z.naTrasie?'<span class="on-route">🏎️ NA TRASIE</span>':fmt(z.czas)}</div><div class="result-caption">${z.czas===null&&z.naTrasie?'STATUS':'WYNIK'}</div>${diff?`<div class="time-gap">${diff}</div>`:''}</div></article>`}).join('');$('tabela').innerHTML=html||'<div class="empty">Brak załóg dla wybranych filtrów</div>';$('meta').textContent=`${a.length} załóg • ${selectedEvent==='live'?'odświeżanie 30 s':'wyniki archiwalne'}`}
+function setData(d){if(!d||!d.ok||!Array.isArray(d.zalogi))throw Error('API nie zwróciło prawidłowych danych');data=d;const eventName=String(d.nazwa_imprezy??'').trim();if(selectedEvent==='archive-wiktoria' && eventName){$('akr-event-select').querySelector('option[value="archive-wiktoria"]').textContent='📁 '+eventName+' — ARCHIWUM';}$('nazwa-imprezy').textContent=eventName;$('nazwa-imprezy').hidden=!eventName;const old=$('klasa').value;const classes=[...new Set(d.zalogi.map(z=>String(z.klasa||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pl',{numeric:true}));$('klasa').innerHTML='<option value="">GENERALKA</option>'+classes.map(k=>`<option value="${esc(k)}">${esc(k)}</option>`).join('');$('klasa').value=classes.includes(old)?old:'';$('status').textContent='Wyniki połączone • '+new Date().toLocaleTimeString('pl-PL');$('blad').innerHTML='';render();renderStartlist();renderAnnouncements()}
+function load(){
+ if(busy)return;
+ busy=true;
+ const generation=eventGeneration;
+ const source=selectedEvent;
+ const endpoint=source==='live'?API:ARCHIVE_API;
+ const id=++seq,cb='AKRcallback_'+id+'_'+Date.now(),script=document.createElement('script');
+ let finished=false;
+ const timeout=setTimeout(()=>finish(new Error('Brak odpowiedzi API')),15000);
+ function finish(err,payload){
+  if(finished)return;
+  finished=true;
+  clearTimeout(timeout);
+  delete window[cb];
+  script.remove();
+  // Odpowiedź poprzedniego rajdu nie może nadpisać nowego.
+  if(generation!==eventGeneration)return;
+  busy=false;
+  try{
+   if(err)throw err;
+   setData(payload);
+   $('status').textContent=(source==='live'?'LIVE • ':'ARCHIWUM • ')+new Date().toLocaleTimeString('pl-PL');
+   $('meta').textContent=$('meta').textContent.replace('odświeżanie 30 s',source==='live'?'odświeżanie 30 s':'wyniki archiwalne');
+  }catch(e){
+   $('status').textContent=source==='live'?'Brak połączenia • ponawiam za 30 s':'Nie udało się pobrać archiwum';
+   $('blad').innerHTML='<div class="error">Nie udało się pobrać wyników. '+(data?'Wyświetlane są ostatnio pobrane dane.':'Sprawdź adres API i uprawnienia arkusza.')+'</div>';
+  }
+ }
+ window[cb]=payload=>finish(null,payload);
+ script.onerror=()=>finish(new Error('Błąd pobierania'));
+ script.src=endpoint+'?callback='+encodeURIComponent(cb)+'&t='+Date.now();
+ document.head.appendChild(script);
+}
+function changeEvent(value){
+ if(value!=='live'&&value!=='archive-wiktoria')return;
+ selectedEvent=value;
+ eventGeneration++;
+ busy=false;
+ data=null;
+ $('klasa').innerHTML='<option value="">GENERALKA</option>';
+ $('nazwa-imprezy').textContent='';
+ $('nazwa-imprezy').hidden=true;
+ $('status').textContent='Łączenie z '+(value==='live'?'LIVE':'archiwum')+'…';
+ $('blad').innerHTML='';
+ $('tabela').innerHTML='<div class="empty">Ładowanie wyników…</div>';
+ $('startlist-results').innerHTML='<div class="empty">Ładowanie listy startowej…</div>';
+ $('announcements-results').innerHTML='<div class="empty">Ładowanie komunikatów…</div>';
+ $('startlist-meta').textContent='Oczekiwanie na dane…';
+ $('meta').textContent='Oczekiwanie na dane…';
+ $('tab-rally').innerHTML=value==='live'?'🏁 WYNIKI LIVE<small>Wyniki rajdu</small>':'🏁 WYNIKI ARCHIWALNE<small>Wyniki rajdu</small>';
+ document.querySelector('.footer').textContent=value==='live'?'AKR • WYNIKI LIVE • Automatyczne odświeżanie co 30 sekund':'AKR • ARCHIWUM RAJDÓW • Wyniki zapisane';
+ render();
+ load();
+}
+// Nazwę pozycji archiwalnej pobieramy od razu, także gdy wybrany jest LIVE.
+// Nie korzysta z mechanizmu load(), więc nie wpływa na wyniki ani ich odświeżanie.
+function loadArchiveEventName(){
+ const cb='AKRcallback_archivename_'+Date.now();
+ const script=document.createElement('script');
+ const option=$('akr-event-select').querySelector('option[value="archive-wiktoria"]');
+ let done=false;
+ const timeout=setTimeout(()=>finish(null),15000);
+ function finish(payload){
+  if(done)return;
+  done=true;
+  clearTimeout(timeout);
+  delete window[cb];
+  script.remove();
+  const name=payload&&payload.ok?String(payload.nazwa_imprezy||'').trim():'';
+  option.textContent=name?'📁 '+name+' — ARCHIWUM':'📁 ARCHIWUM RAJDÓW';
+ }
+ window[cb]=finish;
+ script.onerror=()=>finish(null);
+ script.src=ARCHIVE_API+'?callback='+encodeURIComponent(cb)+'&t='+Date.now();
+ document.head.appendChild(script);
+}
+loadArchiveEventName();
+$('akr-event-select').addEventListener('change',function(){changeEvent(this.value)});
+
+$('wybor-os').onchange=()=>{os=Number($('wybor-os').value);render()};$('na').onclick=()=>{mode='na';render()};$('po').onclick=()=>{mode='po';render()};$('klasa').onchange=render;render();load();setInterval(()=>{if(selectedEvent==='live')load()},30000);
 </script><script>
 'use strict';
 function renderStartlist(){
@@ -168,4 +300,59 @@ function selectAkrView(view){
 for(const name of ['rally','startlist','announcements']){
  document.getElementById('tab-'+name).addEventListener('click',()=>selectAkrView(name));
 }
+</script><div id="akr-notice-overlay" class="akr-notice-overlay" hidden><section class="akr-notice-dialog" role="dialog" aria-modal="true" aria-labelledby="akr-notice-heading"><h2 id="akr-notice-heading">📢 NOWY KOMUNIKAT</h2><div id="akr-notice-date" class="akr-notice-date"></div><div id="akr-notice-title" class="akr-notice-title"></div><div id="akr-notice-body" class="akr-notice-body"></div><button id="akr-notice-ok" class="akr-notice-ok" type="button">POTWIERDZAM / ZAMKNIJ</button></section></div><script>
+/* AKR: niezależny mechanizm okienka, bez zmian w obliczeniach i API */
+(function(){
+ 'use strict';
+ const overlay=document.getElementById('akr-notice-overlay');
+ const button=document.getElementById('akr-notice-ok');
+ const storeKey='akr-notices-confirmed-v2';
+ let acknowledged={};
+ try{acknowledged=JSON.parse(localStorage.getItem(storeKey)||'{}')||{}}catch(e){acknowledged={}}
+ let queue=[],current=null,initialized=false;
+ function fingerprint(k){
+  const raw=[k.id??'',k.data??'',k.godzina??'',k.tytul??'',k.tresc??''].map(x=>String(x)).join('\u001f');
+  let hash=2166136261;
+  for(let i=0;i<raw.length;i++){hash^=raw.charCodeAt(i);hash=Math.imul(hash,16777619)}
+  return (hash>>>0).toString(36)+':'+raw.length;
+ }
+ function showNext(){
+  if(current||!queue.length)return;
+  current=queue.shift();
+  document.getElementById('akr-notice-date').textContent=[current.item.data,current.item.godzina].filter(Boolean).join(' • ');
+  document.getElementById('akr-notice-title').textContent=String(current.item.tytul??'Komunikat organizatora');
+  document.getElementById('akr-notice-body').textContent=String(current.item.tresc??'');
+  overlay.hidden=false;button.focus();
+ }
+ button.addEventListener('click',function(){
+  if(!current)return;
+  acknowledged[current.id]=true;
+  try{localStorage.setItem(storeKey,JSON.stringify(acknowledged))}catch(e){}
+  current=null;overlay.hidden=true;showNext();
+ });
+ function update(){
+  if(selectedEvent!=='live')return;
+  if(typeof data==='undefined'||!data)return;
+  const items=Array.isArray(data.komunikaty)?data.komunikaty:[];
+  const queued=new Set(queue.map(x=>x.id));
+  if(current)queued.add(current.id);
+  for(const item of items){
+   if(!item||typeof item!=='object')continue;
+   const id=fingerprint(item);
+   if(!acknowledged[id]&&!queued.has(id)) {queue.push({id,item});queued.add(id)}
+  }
+  initialized=true;
+  showNext();
+ }
+ // Oryginalny setData wywołuje renderAnnouncements po każdym udanym pobraniu.
+ // Rozszerzamy wyłącznie tę funkcję, bez ingerencji w logikę wyników.
+ const originalRender=window.renderAnnouncements;
+ if(typeof originalRender==='function'){
+  window.renderAnnouncements=function(){originalRender();update()};
+ }
+ document.getElementById('akr-event-select').addEventListener('change',function(){
+  queue=[];current=null;overlay.hidden=true;
+ });
+ update();
+})();
 </script></body></html>
