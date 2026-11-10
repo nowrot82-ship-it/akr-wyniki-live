@@ -177,7 +177,7 @@ function penaltyLabel(z){
   if(limits.length)lines.push('LIMIT ('+osList(limits.map(x=>Number(x.slice(2))))+')');
   return lines;
 }
-function selectedTime(z){if(selectedEvent==='archive-dobrocin'&&z.dbcDnf)return null;const t=parseRow(z);if(mode==='na')return t[os-1].cancelled?null:t[os-1].total;let sum=0,completed=0;for(let i=0;i<os;i++){if(t[i].cancelled)continue;if(t[i].total===null)return null;completed++;sum+=t[i].total}return completed?sum:null}
+function selectedTime(z){if(selectedEvent==='archive-dobrocin'&&z.dbcDnfOs&&os>=z.dbcDnfOs)return null;const t=parseRow(z);if(mode==='na')return t[os-1].cancelled?null:t[os-1].total;let sum=0,completed=0;for(let i=0;i<os;i++){if(t[i].cancelled)continue;if(t[i].total===null)return null;completed++;sum+=t[i].total}return completed?sum:null}
 function selectedOnRoute(z){if(selectedEvent==='archive-dobrocin')return false;const t=parseRow(z);if(mode==='na')return !t[os-1].cancelled&&t[os-1].onRoute&&t[os-1].total===null;for(let i=0;i<os-1;i++){if(!t[i].cancelled&&t[i].total===null)return false}return !t[os-1].cancelled&&t[os-1].onRoute&&t[os-1].total===null}
 function selectedLimits(z){
   const declared=Array.isArray(z.limity)?z.limity:[];
@@ -192,7 +192,7 @@ function selectedLimits(z){
   }).map(name=>String(name).trim().toUpperCase());
 }
 function cancelledSelectedOS(rows){return rows.length>0&&rows.every(z=>parseRow(z)[os-1].cancelled)}
-function render(){$('wybor-os').value=String(os);['na','po'].forEach(x=>{$(x).classList.toggle('active',mode===x);$(x).setAttribute('aria-pressed',String(mode===x))});$('tytul').textContent=(mode==='na'?'WYNIK NA ':'WYNIK PO ')+`OS${os}`;if(!data)return;const k=$('klasa').value;if(mode==='na'&&cancelledSelectedOS(data.zalogi)){$('tabela').innerHTML=`<div class="cancelled-os"><strong>OS${os} — ODWOŁANY</strong><span>Odcinek specjalny został odwołany. Wyniki pozostałych odcinków są dostępne.</span></div>`;$('meta').textContent='Odcinek odwołany • '+(selectedEvent==='live'?'odświeżanie 30 s':'wyniki archiwalne');return}let a=data.zalogi.filter(z=>(!k||z.klasa===k)).map(z=>({...z,czas:selectedTime(z),kara:selectedPenalty(z),naTrasie:selectedOnRoute(z)}));a.sort((x,y)=>(x.czas===null?Infinity:x.czas)-(y.czas===null?Infinity:y.czas)||Number(x.nr)-Number(y.nr));const leader=a.find(x=>x.czas!==null)?.czas??null;let pos=0,prev=null,place=0;const html=a.map(z=>{if(z.czas!==null){pos++;if(prev===null||Math.abs(prev-z.czas)>.00001)place=pos;prev=z.czas}const rank=z.czas===null?(z.dbcDnf?'DNF':'—'):place;const diff=z.czas===null||leader===null?'':z.czas===leader?'':('STRATA +'+fmt(z.czas-leader));const medal=rank===1?'gold':rank===2?'silver':rank===3?'bronze':'other';const limits=z.czas!==null?selectedLimits(z):[];const hasPenalty=z.czas!==null&&z.kara>0;const labels=penaltyLabel(z);const raw=hasPenalty?fmt(z.czas-z.kara):'';const showBreakdown=hasPenalty;return `<article class="crew"><div class="position ${medal}">${rank}</div><div class="crew-info"><div class="driver">${esc(z.kierowca)}</div><div class="pilot">${esc(z.pilot)}</div><div class="car">${esc(z.samochod)}</div><div class="crew-nr">NR ${esc(z.nr)}</div>${labels.map(label=>`<div class="penalty-label">${esc(label)}</div>`).join('')}</div><div class="crew-time">${showBreakdown?`<div class="raw-time">${raw}</div><div class="penalty-time">+${fmt(z.kara)}</div>`:''}<div class="final-time">${z.dbcDnf?'DNF':z.czas===null&&z.naTrasie?'<span class="on-route">🏎️ NA TRASIE</span>':fmt(z.czas)}</div><div class="result-caption">${z.dbcDnf?'STATUS':z.czas===null&&z.naTrasie?'STATUS':'WYNIK'}</div>${diff?`<div class="time-gap">${diff}</div>`:''}</div></article>`}).join('');$('tabela').innerHTML=html||'<div class="empty">Brak załóg dla wybranych filtrów</div>';$('meta').textContent=`${a.length} załóg • ${selectedEvent==='live'?'odświeżanie 30 s':'wyniki archiwalne'}`}
+function render(){$('wybor-os').value=String(os);['na','po'].forEach(x=>{$(x).classList.toggle('active',mode===x);$(x).setAttribute('aria-pressed',String(mode===x))});$('tytul').textContent=(mode==='na'?'WYNIK NA ':'WYNIK PO ')+`OS${os}`;if(!data)return;const k=$('klasa').value;if(mode==='na'&&cancelledSelectedOS(data.zalogi)){$('tabela').innerHTML=`<div class="cancelled-os"><strong>OS${os} — ODWOŁANY</strong><span>Odcinek specjalny został odwołany. Wyniki pozostałych odcinków są dostępne.</span></div>`;$('meta').textContent='Odcinek odwołany • '+(selectedEvent==='live'?'odświeżanie 30 s':'wyniki archiwalne');return}let a=data.zalogi.filter(z=>(!k||z.klasa===k)).map(z=>({...z,czas:selectedTime(z),kara:selectedPenalty(z),naTrasie:selectedOnRoute(z)}));a.sort((x,y)=>(x.czas===null?Infinity:x.czas)-(y.czas===null?Infinity:y.czas)||Number(x.nr)-Number(y.nr));const leader=a.find(x=>x.czas!==null)?.czas??null;let pos=0,prev=null,place=0;const html=a.map(z=>{if(z.czas!==null){pos++;if(prev===null||Math.abs(prev-z.czas)>.00001)place=pos;prev=z.czas}const dbcRetired=selectedEvent==='archive-dobrocin'&&z.dbcDnfOs&&os>=z.dbcDnfOs;const rank=z.czas===null?(dbcRetired?'DNF':'—'):place;const diff=z.czas===null||leader===null?'':z.czas===leader?'':('STRATA +'+fmt(z.czas-leader));const medal=rank===1?'gold':rank===2?'silver':rank===3?'bronze':'other';const limits=z.czas!==null?selectedLimits(z):[];const hasPenalty=z.czas!==null&&z.kara>0;const labels=penaltyLabel(z);const raw=hasPenalty?fmt(z.czas-z.kara):'';const showBreakdown=hasPenalty;return `<article class="crew"><div class="position ${medal}">${rank}</div><div class="crew-info"><div class="driver">${esc(z.kierowca)}</div><div class="pilot">${esc(z.pilot)}</div><div class="car">${esc(z.samochod)}</div><div class="crew-nr">NR ${esc(z.nr)}</div>${labels.map(label=>`<div class="penalty-label">${esc(label)}</div>`).join('')}</div><div class="crew-time">${showBreakdown?`<div class="raw-time">${raw}</div><div class="penalty-time">+${fmt(z.kara)}</div>`:''}<div class="final-time">${dbcRetired?'DNF':z.czas===null&&z.naTrasie?'<span class="on-route">🏎️ NA TRASIE</span>':fmt(z.czas)}</div><div class="result-caption">${dbcRetired?'STATUS':z.czas===null&&z.naTrasie?'STATUS':'WYNIK'}</div>${diff?`<div class="time-gap">${diff}</div>`:''}</div></article>`}).join('');$('tabela').innerHTML=html||'<div class="empty">Brak załóg dla wybranych filtrów</div>';$('meta').textContent=`${a.length} załóg • ${selectedEvent==='live'?'odświeżanie 30 s':'wyniki archiwalne'}`}
 // Dobrocin: dostosowanie osobnego API do formatu używanego przez stronę.
 function adaptDobrocin(payload){
   if(!payload||payload.status!=='success'||!Array.isArray(payload.zalogi))
@@ -203,17 +203,21 @@ function adaptDobrocin(payload){
     komunikaty:[],
     zalogi:payload.zalogi.map(z=>{
       const dnf=String(z.status||'').trim().toUpperCase()==='DNF';
+      const stages=Array.isArray(z.odcinki)?z.odcinki:[];
+      // Pierwszy jawny wpis DNF wskazuje OS wycofania.
+      const firstDnf=stages.findIndex(etap=>String(etap?.czas??'').trim().toUpperCase()==='DNF');
+      const dbcDnfOs=dnf?(firstDnf>=0?firstDnf+1:1):null;
       const wyniki=[];
       for(let i=0;i<6;i++){
         const etap=(Array.isArray(z.odcinki)?z.odcinki:[])[i]||{};
         const raw=String(etap.czas||'').trim();
         const pen=penaltySecs(etap.kara);
         const seconds=secs(raw);
-        const invalid=seconds===null||seconds>=36000||!Number.isFinite(pen);
+        const invalid=seconds===null||!Number.isFinite(pen);
         wyniki.push(raw,etap.kara??0,invalid?'':fmt(seconds+pen));
       }
       return {nr:String(z.numer??''),klasa:String(z.klasa??''),kierowca:z.kierowca||'',
-        pilot:z.pilot||'',samochod:z.samochod||'',wyniki,limity:[],dbcDnf:dnf};
+        pilot:z.pilot||'',samochod:z.samochod||'',wyniki,limity:[],dbcDnfOs};
     })
   };
 }
