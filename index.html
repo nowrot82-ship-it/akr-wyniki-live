@@ -9,6 +9,23 @@
 .akr-event-picker select{flex:1;min-width:0;max-width:100%;border:1px solid #8c2229;background:#181818;color:white;border-radius:7px;padding:7px 6px;font-size:12px;font-weight:750}
 @media(max-width:420px){.akr-event-picker{gap:5px}.akr-event-picker label{font-size:9px}.akr-event-picker select{font-size:11px;padding:6px 4px}}
  .season-all-label{font-size:12px;font-weight:900;letter-spacing:.5px;color:#f4d58c;padding:10px 0;display:inline-block}
+
+/* Klasyfikacja roczna: kierowca, auto i klasa w jednej kolumnie */
+.season-group .season-table{min-width:690px}
+.season-group .season-table .driver-col{min-width:170px;width:28%;text-align:left}
+.season-driver-cell span{display:block}
+.season-driver-name{font-size:13px;font-weight:850;line-height:1.3;color:#fff}
+.season-driver-car{font-size:11px;font-weight:500;line-height:1.3;color:#bfcbd7;margin-top:3px;overflow-wrap:anywhere}
+.season-driver-class{font-size:10px;font-weight:750;letter-spacing:.3px;color:#8fb9e0;margin-top:3px}
+@media(max-width:650px){
+ .season-group .season-table{min-width:610px}
+ .season-group .season-table .driver-col{min-width:142px;width:26%}
+ .season-group .season-table td{padding:8px 4px;font-size:11px}
+ .season-group .season-table th{padding:8px 4px;font-size:10px}
+ .season-driver-name{font-size:12px}
+ .season-driver-car{font-size:10px}
+ .season-driver-class{font-size:9px}
+}
 </style><style>
 .results{margin-top:14px}.crew{display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:11px;align-items:center;padding:14px 2px;border-bottom:1px solid #393939;min-width:0}.position{width:36px;height:42px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:18px;color:#111}.position.gold{background:#e7ba45}.position.silver{background:#c9cdd2}.position.bronze{background:#c58a59}.position.other{background:#fff}.crew-info{min-width:0;overflow-wrap:anywhere}.driver{font-size:15px;font-weight:800;line-height:1.25}.pilot{font-size:13px;line-height:1.3;margin-top:3px}.car{font-size:11px;color:#bdbdbd;line-height:1.3;margin-top:3px}.crew-nr{font-size:10px;color:#aaa;margin-top:4px}.penalty-label{font-size:11px;font-weight:800;color:#ff5b5b;margin-top:5px;overflow-wrap:anywhere;white-space:normal}.crew-time{text-align:right;min-width:91px;white-space:nowrap;font-variant-numeric:tabular-nums}.raw-time{font-size:12px;color:#c9c9c9}.penalty-time{font-size:12px;font-weight:800;color:#ff5b5b}.final-time{font-size:17px;font-weight:900;letter-spacing:-.3px}.result-caption{font-size:9px;color:#aaa;letter-spacing:1px}.time-gap{font-size:10px;color:#bdbdbd;margin-top:4px}.on-route{display:inline-block;color:#86efac;font-size:12px;font-weight:900;letter-spacing:.25px;white-space:nowrap}.cancelled-os{border:1px solid #a63b3b;background:#271313;border-radius:12px;padding:34px 18px;text-align:center;margin-top:12px}.cancelled-os strong{display:block;font-size:clamp(22px,5vw,34px);color:#ff6868;letter-spacing:1px}.cancelled-os span{display:block;margin-top:8px;font-size:13px;color:#ddd}.on-route-note{font-size:9px;color:#aaa;letter-spacing:.6px;margin-top:3px}@media(max-width:390px){.wrap{padding:7px}.panel{padding:10px}.crew{grid-template-columns:34px minmax(0,1fr) auto;gap:7px}.position{width:31px;height:37px}.driver{font-size:13px}.pilot{font-size:12px}.crew-time{min-width:78px}.final-time{font-size:15px}.time-gap{font-size:9px}}
 </style><style>
@@ -143,10 +160,10 @@ html,body{background:#000}
 .season-toolbar button{background:#b51220;color:#fff;border:1px solid #f33;border-radius:8px;padding:11px;font-weight:800;cursor:pointer}
 .season-status{display:inline-block;padding:5px 7px;border-radius:5px;font-size:10px;font-weight:900;white-space:nowrap}
 .season-status.ok{color:#071e0f;background:#5ee69a}.season-status.play{color:#231b00;background:#ffd66a}.season-status.no{color:#fff;background:#b82935}
-.season-group .season-table{min-width:890px}
+.season-group .season-table{min-width:690px}
 .season-group .season-table td{font-size:12px}
 .season-group .season-table .driver-col{min-width:150px}
-.season-group .season-table .car-col{min-width:125px;text-align:left}
+.season-driver-name{font-weight:800;line-height:1.25}.season-driver-car{font-size:11px;font-weight:400;color:#b9c7d3;margin-top:3px;line-height:1.3;overflow-wrap:anywhere}.season-driver-class{font-size:10px;font-weight:600;color:#8ba6ba;margin-top:2px}
 .season-group .season-table .total{font-size:15px}
 .season-group .season-table .not-ranked{color:#aaa}
 .season-hint{line-height:1.5}
@@ -442,6 +459,14 @@ function seasonFromSnapshot(row,round){
  return {...row,status:finished?'OK':'DNF',klasy_dodatkowe:extra};
 }
 function seasonRows(round){return (seasonData[round]||[]).map(z=>'odcinki' in z?seasonFromApi({status:'success',zalogi:[z]},round)[0]:seasonFromSnapshot(z,round));}
+function seasonCarName(raw){
+ const original=String(raw||'').trim().replace(/\s+/g,' ');
+ const key=original.toLocaleLowerCase('pl').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ').trim();
+ // Różne zapisy tego samego auta w arkuszach rund I–V.
+ if(/^fiat(?:a)? seicento sporting(?: crg)?$/.test(key))return 'Fiat Seicento Sporting';
+ if(/^fiat(?:a)? seicento$/.test(key))return 'Fiat Seicento';
+ return original;
+}
 function seasonBuild(){
  const map=new Map(),roundCounts={};
  for(let round=1;round<=5;round++){
@@ -454,7 +479,7 @@ function seasonBuild(){
    for(const cls of classes){
     const key=seasonNorm(driver)+'|'+cls;
     if(!map.has(key))map.set(key,{driver,cls,cars:new Set(),rounds:{},points:0,completed:0});
-    const item=map.get(key);if(z.samochod)item.cars.add(String(z.samochod).trim());
+    const item=map.get(key);if(z.samochod)item.cars.add(seasonCarName(z.samochod));
     if(!byClass.has(cls))byClass.set(cls,[]);
     byClass.get(cls).push({key,z,finished:z.status==='OK',time:typeof z.czas_laczny==='number'?z.czas_laczny:seasonSec(z.czas_laczny)});
    }
@@ -489,9 +514,9 @@ function seasonRender(){
    const status=qualified?'KLASYFIKOWANY':play?'W GRZE':'NIEKLASYFIKOWANY';
    const style=qualified?'ok':play?'play':'no';
    const cells=Array.from({length:6},(_,i)=>{const r=e.rounds[i+1];return '<td class="score">'+(r?(r.finished?String(r.pts):'DNF'):'—')+'</td>';}).join('');
-   return '<tr><td class="'+(qualified?'':'not-ranked')+'"><span class="rank-pill '+(qualified&&place===1?'gold':qualified&&place===2?'silver':qualified&&place===3?'bronze':'')+'">'+pos+'</span></td><td class="driver-col">'+esc(e.driver)+'</td><td class="car-col">'+esc([...e.cars].join(' / '))+'</td><td>'+esc(cls)+'</td>'+cells+'<td class="total">'+e.points+'</td><td>'+e.completed+'/6</td><td><span class="season-status '+style+'">'+status+'</span></td></tr>';
+   return '<tr><td class="'+(qualified?'':'not-ranked')+'"><span class="rank-pill '+(qualified&&place===1?'gold':qualified&&place===2?'silver':qualified&&place===3?'bronze':'')+'">'+pos+'</span></td><td class="driver-col"><div class="season-driver-name">'+esc(e.driver)+'</div><div class="season-driver-car">'+esc([...e.cars].join(' / '))+'</div><div class="season-driver-class">'+esc(cls==='JUNIOR'?'JUNIOR':'KLASA '+cls)+'</div></td>'+cells+'<td class="total">'+e.points+'</td><td>'+e.completed+'/6</td><td><span class="season-status '+style+'">'+status+'</span></td></tr>';
   }).join('');
-  sections.push('<section class="season-group"><h3>'+(cls==='JUNIOR'?'JUNIOR':'KLASA '+esc(cls))+' — '+group.length+' pozycji</h3><div class="season-scroll"><table class="season-table"><thead><tr><th>POZ.</th><th class="driver-col">KIEROWCA</th><th>SAMOCHÓD</th><th>KL.</th><th>R1</th><th>R2</th><th>R3</th><th>R4</th><th>R5</th><th>R6</th><th>SUMA</th><th>UKOŃ.</th><th>STATUS</th></tr></thead><tbody>'+body+'</tbody></table></div></section>');
+  sections.push('<section class="season-group"><h3>'+(cls==='JUNIOR'?'JUNIOR':'KLASA '+esc(cls))+' — '+group.length+' pozycji</h3><div class="season-scroll"><table class="season-table"><thead><tr><th>POZ.</th><th class="driver-col">KIEROWCA / AUTO / KLASA</th><th>R1</th><th>R2</th><th>R3</th><th>R4</th><th>R5</th><th>R6</th><th>SUMA</th><th>UKOŃ.</th><th>STATUS</th></tr></thead><tbody>'+body+'</tbody></table></div></section>');
  }
  document.getElementById('season-results').innerHTML=sections.join('');
  document.getElementById('season-info').textContent=seasonFetchState+' • '+entries.length+' pozycji kierowca/klasa • rundy I–V: '+Object.entries(built.roundCounts).map(([r,n])=>'R'+r+' '+n).join(', ')+' załóg';
