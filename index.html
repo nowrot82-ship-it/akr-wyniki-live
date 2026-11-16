@@ -601,7 +601,7 @@ function renderEventSettings(payload){
   const poster=url(cfg.plakat_url),rules=url(cfg.regulamin_url);
   const actions=[];
   if(cfg.zapisy_otwarte===true){
-    actions.push('<span class="akr-event-note">Zapisy są otwarte — formularz zgłoszeń zostanie udostępniony po uruchomieniu osobnego systemu zgłoszeń.</span>');
+    actions.push('<a href="https://script.google.com/macros/s/AKfycbx9VTIRDZ6wSB58qDzcKuUWZLAB0xrfBymjU-v5_iLAsCoQcpAzfned1NMrAZSGDqzQ/exec" target="_blank" rel="noopener noreferrer">🏁 ZAPISZ SIĘ NA RAJD</a>');
   }else{
     actions.push('<span class="akr-event-note">🔒 Zapisy obecnie zamknięte</span>');
   }
