@@ -26,6 +26,16 @@
  .season-driver-car{font-size:10px}
  .season-driver-class{font-size:9px}
 }
+
+/* Opis i harmonogram: zwijane sekcje, bez zajmowania miejsca pod plakatem */
+.akr-expand{padding:0;overflow:hidden}
+.akr-expand summary{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:17px;cursor:pointer;font-size:18px;font-weight:900;list-style:none;user-select:none}
+.akr-expand summary::-webkit-details-marker{display:none}
+.akr-expand summary::after{content:"+";font-size:24px;line-height:1;color:#f0272f}
+.akr-expand[open] summary::after{content:"−"}
+.akr-expand[open] summary{border-bottom:1px solid #383838}
+.akr-expand p{padding:16px 17px 19px!important;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.65}
+.akr-expand summary:focus-visible{outline:2px solid white;outline-offset:-3px}
 </style><style>
 .results{margin-top:14px}.crew{display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:11px;align-items:center;padding:14px 2px;border-bottom:1px solid #393939;min-width:0}.position{width:36px;height:42px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:18px;color:#111}.position.gold{background:#e7ba45}.position.silver{background:#c9cdd2}.position.bronze{background:#c58a59}.position.other{background:#fff}.crew-info{min-width:0;overflow-wrap:anywhere}.driver{font-size:15px;font-weight:800;line-height:1.25}.pilot{font-size:13px;line-height:1.3;margin-top:3px}.car{font-size:11px;color:#bdbdbd;line-height:1.3;margin-top:3px}.crew-nr{font-size:10px;color:#aaa;margin-top:4px}.penalty-label{font-size:11px;font-weight:800;color:#ff5b5b;margin-top:5px;overflow-wrap:anywhere;white-space:normal}.crew-time{text-align:right;min-width:91px;white-space:nowrap;font-variant-numeric:tabular-nums}.raw-time{font-size:12px;color:#c9c9c9}.penalty-time{font-size:12px;font-weight:800;color:#ff5b5b}.final-time{font-size:17px;font-weight:900;letter-spacing:-.3px}.result-caption{font-size:9px;color:#aaa;letter-spacing:1px}.time-gap{font-size:10px;color:#bdbdbd;margin-top:4px}.on-route{display:inline-block;color:#86efac;font-size:12px;font-weight:900;letter-spacing:.25px;white-space:nowrap}.cancelled-os{border:1px solid #a63b3b;background:#271313;border-radius:12px;padding:34px 18px;text-align:center;margin-top:12px}.cancelled-os strong{display:block;font-size:clamp(22px,5vw,34px);color:#ff6868;letter-spacing:1px}.cancelled-os span{display:block;margin-top:8px;font-size:13px;color:#ddd}.on-route-note{font-size:9px;color:#aaa;letter-spacing:.6px;margin-top:3px}@media(max-width:390px){.wrap{padding:7px}.panel{padding:10px}.crew{grid-template-columns:34px minmax(0,1fr) auto;gap:7px}.position{width:31px;height:37px}.driver{font-size:13px}.pilot{font-size:12px}.crew-time{min-width:78px}.final-time{font-size:15px}.time-gap{font-size:9px}}
 </style><style>
@@ -173,9 +183,31 @@ html,body{background:#000}
 body.akr-season-active #nazwa-imprezy,
 body.akr-season-active .akr-event-picker,
 body.akr-season-active .mast .status{display:none!important}
-</style></head><body><main class="wrap"><div class="sticky-top"><header class="mast"><img class="akr-logo" src="akr-logo-stoper.png" alt="AKR ally team — Stowarzyszenie Rajdowe" width="1086" height="362"><h1>WYNIKI LIVE</h1><div id="nazwa-imprezy" class="event-name" hidden></div><small>OFICJALNY SYSTEM WYNIKÓW RAJDU</small><div class="status"><span class="dot"></span><span id="status">Łączenie z wynikami…</span></div></header><div class="akr-event-picker"><label for="akr-event-select">🏁 WYBIERZ IMPREZĘ</label><select id="akr-event-select" aria-label="Wybierz imprezę"><option value="live">🟢 AKTUALNY RAJD — LIVE</option><option value="archive-wiktoria">🔴 Pobieranie nazwy rajdu…</option><option value="archive-dobrocin">🔴 DOBROCIN BARWACZ CUP — RUNDA V</option><option value="archive-dobrocin-r4">🔴 DOBROCIN BARWACZ CUP — RUNDA IV</option><option value="archive-dobrocin-r3">🔴 DOBROCIN BARWACZ CUP — RUNDA III</option><option value="archive-dobrocin-r2">🔴 DOBROCIN BARWACZ CUP — RUNDA II</option><option value="archive-dobrocin-r1">🔴 DOBROCIN BARWACZ CUP — RUNDA I</option></select></div>
-</div><nav class="view-tabs" aria-label="Wybór widoku"><button type="button" class="view-tab active" id="tab-rally" aria-pressed="true">🏁 WYNIKI LIVE<small>Wyniki rajdu</small></button><button type="button" class="view-tab" id="tab-startlist" aria-pressed="false">📋 LISTA STARTOWA<small>Załogi i pojazdy</small></button><button type="button" class="view-tab" id="tab-announcements" aria-pressed="false">📢 KOMUNIKATY<small>Informacje organizatora</small></button><button type="button" class="view-tab" id="tab-season" aria-pressed="false">🏆 KLASYFIKACJA ROCZNA<small>Sezon 2026</small></button></nav><div id="rally-view"><div class="sticky-top"><section class="panel" aria-label="Wybór wyników"><div class="filter-grid"><div><label class="label" for="wybor-os">ODCINEK SPECJALNY</label><select id="wybor-os"><option value="1">OS1</option><option value="2">OS2</option><option value="3">OS3</option><option value="4">OS4</option><option value="5">OS5</option><option value="6">OS6</option></select></div><div><label class="label" for="klasa">KLASA</label><select id="klasa"><option value="">GENERALNA</option></select></div></div><div class="mode"><button type="button" id="na">WYNIK NA OS</button><button type="button" id="po">WYNIK PO OS</button></div></section></div>
-<section class="panel"><img class="event-poster" src="plakat-aktualny-rajd.jpg" alt="KJS Jedziemy dla Wiktorii 2 — plakat aktualnego rajdu" width="1536" height="864" loading="lazy"><div class="toolbar"><h2 id="tytul">WYNIKI</h2><div class="note" id="meta">Oczekiwanie na dane</div></div><div id="blad" role="alert"></div><div class="results" id="tabela"><div class="empty">Ładowanie wyników…</div></div></section></div><section id="startlist-view" hidden aria-label="Lista startowa"><h2 class="info-heading">📋 LISTA STARTOWA</h2><p class="info-subtitle" id="startlist-meta">Oczekiwanie na dane załóg…</p><div id="startlist-results"><div class="empty">Ładowanie listy startowej…</div></div></section><section id="announcements-view" hidden aria-label="Komunikaty organizatora"><h2 class="info-heading">📢 KOMUNIKATY</h2><p class="info-subtitle">Oficjalne informacje organizatora rajdu</p><div id="announcements-results"><div class="empty">Ładowanie komunikatów…</div></div></section><section id="season-view" hidden aria-label="Klasyfikacja roczna"><h2 class="season-title">🏆 KLASYFIKACJA ROCZNA<br>DOBROCIN BARWACZ CUP <em>2026</em></h2><div class="season-sub">Klasyfikacja roczna przed finałem • Runda VI: 12 grudnia 2026</div><div class="season-toolbar"><span class="season-all-label">WSZYSTKIE KLASY • 1–6 + JUNIOR</span><button type="button" id="season-refresh">↻ ODŚWIEŻ WYNIKI</button></div><div id="season-info" class="season-hint">Przygotowywanie klasyfikacji…</div><div id="season-results"></div><p class="season-hint">Punktacja za miejsca 1–8: 10, 8, 6, 5, 4, 3, 2, 1. Minimum 4 ukończone rundy w tej samej klasie. R6 zostanie uwzględniona po finale. „W GRZE” oznacza 3 ukończone rundy przed finałem.</p></section><footer class="footer">AKR • WYNIKI LIVE • Automatyczne odświeżanie co 30 sekund</footer></main>
+</style><style>
+/* AKR: karta rajdu sterowana przez USTAWIENIA_RAJDU */
+.view-tabs{grid-template-columns:repeat(5,minmax(0,1fr))}
+#event-view{flex:1 1 0;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:12px 3px 30px}
+#event-view[hidden]{display:none!important}
+.akr-event-hero{background:linear-gradient(145deg,#231015,#111 65%);border:1px solid #76232b;border-radius:17px;padding:clamp(18px,4vw,35px);margin:4px 0 15px;box-shadow:0 12px 36px #0006}
+.akr-event-kicker{color:#ff6974;font-size:11px;letter-spacing:2px;font-weight:900;text-transform:uppercase}
+.akr-event-hero h2{font-size:clamp(27px,6vw,47px);line-height:1.08;margin:12px 0 8px;overflow-wrap:anywhere}
+.akr-event-round{color:#ff202c;font-weight:900;font-size:clamp(24px,5vw,34px);line-height:1.15;letter-spacing:.5px;margin:10px 0 12px}
+.akr-event-facts{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0;color:#eee;font-size:14px;font-weight:700}
+.akr-event-facts span{padding:8px 12px;background:#262027;border:1px solid #51313a;border-radius:8px}
+.akr-event-desc{color:#d4d4d4;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;line-height:1.7}
+.akr-event-poster{display:block;max-width:100%;max-height:560px;object-fit:contain;border-radius:12px;margin:18px auto}
+.akr-event-actions{display:flex;flex-wrap:wrap;gap:9px;margin:20px 0 0}
+.akr-event-actions a,.akr-event-actions button{background:#bd1723;color:#fff;border:1px solid #e73b47;border-radius:9px;padding:12px 16px;text-decoration:none;font-weight:900;font-size:13px;cursor:pointer}
+.akr-event-actions .akr-secondary{background:#292929;border-color:#515151}
+.akr-event-card{background:#171717;border:1px solid #383838;border-radius:13px;padding:17px;margin:12px 0}
+.akr-event-card h3{margin:0 0 8px;font-size:18px}.akr-event-card p{margin:0;color:#ccc;white-space:pre-wrap;overflow-wrap:anywhere}
+.akr-event-note{color:#bcbcbc;font-size:12px}
+@media(max-width:650px){.view-tabs{grid-template-columns:repeat(4,minmax(0,1fr))}.view-tab{font-size:10px;padding:9px 3px}#tab-event{grid-column:1/-1;font-size:13px;background:#55171d;border-color:#b22b36}#tab-event.active{background:#c91522}.akr-event-hero{padding:18px}.akr-event-actions a,.akr-event-actions button{flex:1 1 100%;text-align:center}}
+#tab-rally[hidden]{display:none!important}
+.wrap>.footer{display:block;flex:0 0 auto;padding:5px 8px 3px;text-align:center;font-size:11px;color:#aaa;border-top:1px solid #262626;background:#000}
+</style></head><body><main class="wrap"><div class="sticky-top"><header class="mast"><img class="akr-logo" src="akr-logo-stoper.png" alt="AKR ally team — Stowarzyszenie Rajdowe" width="1086" height="362"><h1>WYNIKI LIVE</h1><div id="nazwa-imprezy" class="event-name" hidden></div><small>OFICJALNY SYSTEM WYNIKÓW RAJDU</small><div class="status"><span class="dot"></span><span id="status">Trwa pobieranie danych…</span></div></header><div class="akr-event-picker"><label for="akr-event-select">🏁 WYBIERZ IMPREZĘ</label><select id="akr-event-select" aria-label="Wybierz imprezę"><option value="live">🟢 AKTUALNY RAJD — LIVE</option><option value="archive-wiktoria">🔴 Trwa pobieranie danych…</option><option value="archive-dobrocin">🔴 DOBROCIN BARWACZ CUP — RUNDA V</option><option value="archive-dobrocin-r4">🔴 DOBROCIN BARWACZ CUP — RUNDA IV</option><option value="archive-dobrocin-r3">🔴 DOBROCIN BARWACZ CUP — RUNDA III</option><option value="archive-dobrocin-r2">🔴 DOBROCIN BARWACZ CUP — RUNDA II</option><option value="archive-dobrocin-r1">🔴 DOBROCIN BARWACZ CUP — RUNDA I</option></select></div>
+</div><nav class="view-tabs" aria-label="Wybór widoku"><button type="button" class="view-tab active" id="tab-event" aria-pressed="true">📅 NADCHODZĄCY RAJD<small>Informacje o imprezie</small></button><button type="button" class="view-tab" id="tab-rally" aria-pressed="false">🏁 WYNIKI LIVE<small>Wyniki rajdu</small></button><button type="button" class="view-tab" id="tab-startlist" aria-pressed="false">📋 LISTA STARTOWA<small>Załogi i pojazdy</small></button><button type="button" class="view-tab" id="tab-announcements" aria-pressed="false">📢 KOMUNIKATY<small>Informacje organizatora</small></button><button type="button" class="view-tab" id="tab-season" aria-pressed="false">🏆 KLASYFIKACJA ROCZNA<small>Sezon 2026</small></button></nav><section id="event-view" aria-label="Nadchodzący rajd"><div id="akr-event-content" aria-live="polite"><div class="akr-event-card">Trwa pobieranie danych…</div></div></section><div id="rally-view" hidden><div class="sticky-top"><section class="panel" aria-label="Wybór wyników"><div class="filter-grid"><div><label class="label" for="wybor-os">ODCINEK SPECJALNY</label><select id="wybor-os"><option value="1">OS1</option><option value="2">OS2</option><option value="3">OS3</option><option value="4">OS4</option><option value="5">OS5</option><option value="6">OS6</option></select></div><div><label class="label" for="klasa">KLASA</label><select id="klasa"><option value="">GENERALNA</option></select></div></div><div class="mode"><button type="button" id="na">WYNIK NA OS</button><button type="button" id="po">WYNIK PO OS</button></div></section></div>
+<section class="panel"><img class="event-poster" src="plakat-aktualny-rajd.jpg" alt="KJS Jedziemy dla Wiktorii 2 — plakat aktualnego rajdu" width="1536" height="864" loading="lazy"><div class="toolbar"><h2 id="tytul">WYNIKI</h2><div class="note" id="meta">Oczekiwanie na dane</div></div><div id="blad" role="alert"></div><div class="results" id="tabela"><div class="empty">Ładowanie wyników…</div></div></section></div><section id="startlist-view" hidden aria-label="Lista startowa"><h2 class="info-heading">📋 LISTA STARTOWA</h2><p class="info-subtitle" id="startlist-meta">Oczekiwanie na dane załóg…</p><div id="startlist-results"><div class="empty">Ładowanie listy startowej…</div></div></section><section id="announcements-view" hidden aria-label="Komunikaty organizatora"><h2 class="info-heading">📢 KOMUNIKATY</h2><p class="info-subtitle">Oficjalne informacje organizatora rajdu</p><div id="announcements-results"><div class="empty">Ładowanie komunikatów…</div></div></section><section id="season-view" hidden aria-label="Klasyfikacja roczna"><h2 class="season-title">🏆 KLASYFIKACJA ROCZNA<br>DOBROCIN BARWACZ CUP <em>2026</em></h2><div class="season-sub">Klasyfikacja roczna przed finałem • Runda VI: 12 grudnia 2026</div><div class="season-toolbar"><span class="season-all-label">WSZYSTKIE KLASY • 1–6 + JUNIOR</span><button type="button" id="season-refresh">↻ ODŚWIEŻ WYNIKI</button></div><div id="season-info" class="season-hint">Przygotowywanie klasyfikacji…</div><div id="season-results"></div><p class="season-hint">Punktacja za miejsca 1–8: 10, 8, 6, 5, 4, 3, 2, 1. Minimum 4 ukończone rundy w tej samej klasie. R6 zostanie uwzględniona po finale. „W GRZE” oznacza 3 ukończone rundy przed finałem.</p></section><footer class="footer">© Szymon Nowrot 2026</footer></main>
 <script>
 'use strict';
 const API='https://script.google.com/macros/s/AKfycbwtcbpTmcDbpIlW7YtfmmWJXyyg1Tgp9M-LS5CepIfh4vtdoHHicTK3MdOQQkjs9Jxb/exec';
@@ -266,7 +298,7 @@ function adaptDobrocin(payload){
     })
   };
 }
-function setData(d){if(isDobrocinArchive())d=adaptDobrocin(d);if(!d||!d.ok||!Array.isArray(d.zalogi))throw Error('API nie zwróciło prawidłowych danych');data=d;const eventName=String(d.nazwa_imprezy??'').trim();if(selectedEvent==='archive-wiktoria' && eventName){$('akr-event-select').querySelector('option[value="archive-wiktoria"]').textContent='🔴 '+eventName;}$('nazwa-imprezy').textContent=eventName;$('nazwa-imprezy').hidden=!eventName;const old=$('klasa').value;const classes=[...new Set(d.zalogi.flatMap(z=>[String(z.klasa||'').trim(),...(Array.isArray(z.klasyDodatkowe)?z.klasyDodatkowe:[])].filter(Boolean)))].sort((a,b)=>a.localeCompare(b,'pl',{numeric:true}));$('klasa').innerHTML='<option value="">GENERALNA</option>'+classes.map(k=>`<option value="${esc(k)}">${esc(k==='JUNIOR'?'JUNIOR':'KLASA '+k)}</option>`).join('');$('klasa').value=classes.includes(old)?old:'';$('status').textContent='Wyniki połączone • '+new Date().toLocaleTimeString('pl-PL');$('blad').innerHTML='';render();renderStartlist();renderAnnouncements()}
+function setData(d){if(isDobrocinArchive())d=adaptDobrocin(d);if(!d||!d.ok||!Array.isArray(d.zalogi))throw Error('API nie zwróciło prawidłowych danych');data=d;const eventName=String(d.nazwa_imprezy??'').trim();if(selectedEvent==='archive-wiktoria' && eventName){$('akr-event-select').querySelector('option[value="archive-wiktoria"]').textContent='🔴 '+eventName;}$('nazwa-imprezy').textContent=eventName;$('nazwa-imprezy').hidden=!eventName;const old=$('klasa').value;const classes=[...new Set(d.zalogi.flatMap(z=>[String(z.klasa||'').trim(),...(Array.isArray(z.klasyDodatkowe)?z.klasyDodatkowe:[])].filter(Boolean)))].sort((a,b)=>a.localeCompare(b,'pl',{numeric:true}));$('klasa').innerHTML='<option value="">GENERALNA</option>'+classes.map(k=>`<option value="${esc(k)}">${esc(k==='JUNIOR'?'JUNIOR':'KLASA '+k)}</option>`).join('');$('klasa').value=classes.includes(old)?old:'';$('status').textContent='Wyniki połączone • '+new Date().toLocaleTimeString('pl-PL');$('blad').innerHTML='';render();renderStartlist();renderAnnouncements();renderEventSettings(d)}
 function load(){
  if(busy)return;
  busy=true;
@@ -319,7 +351,7 @@ function changeEvent(value){
  $('startlist-meta').textContent='Oczekiwanie na dane…';
  $('meta').textContent='Oczekiwanie na dane…';
  $('tab-rally').innerHTML=value==='live'?'🏁 WYNIKI LIVE<small>Wyniki rajdu</small>':'🏁 WYNIKI ARCHIWALNE<small>Wyniki rajdu</small>';
- document.querySelector('.footer').textContent=value==='live'?'AKR • WYNIKI LIVE • Automatyczne odświeżanie co 30 sekund':'AKR • ARCHIWUM RAJDÓW • Wyniki zapisane';
+ document.querySelector('.footer').textContent='© Szymon Nowrot 2026';
  render();
  load();
 }
@@ -365,8 +397,9 @@ function renderAnnouncements(){
  target.innerHTML=items.map(k=>'<article class="announcement-card"><div class="announcement-date">'+esc([k.data,k.godzina].filter(Boolean).join(' • '))+'</div><h3 class="announcement-title">'+esc(k.tytul)+'</h3><div class="announcement-body">'+esc(k.tresc)+'</div></article>').join('')||'<div class="empty">Brak opublikowanych komunikatów.</div>';
 }
 function selectAkrView(view){
+ if(view==='rally' && selectedEvent==='live' && !window.akrLiveResultsEnabled){view='event';}
  document.body.classList.toggle('akr-season-active',view==='season');
- for(const name of ['rally','startlist','announcements','season']){
+ for(const name of ['event','rally','startlist','announcements','season']){
   const active=name===view;
   document.getElementById(name+'-view').hidden=!active;
   const tab=document.getElementById('tab-'+name);
@@ -374,7 +407,7 @@ function selectAkrView(view){
   tab.setAttribute('aria-pressed',String(active));
  }
 }
-for(const name of ['rally','startlist','announcements','season']){
+for(const name of ['event','rally','startlist','announcements','season']){
  document.getElementById('tab-'+name).addEventListener('click',()=>selectAkrView(name));
 }
 </script><div id="akr-notice-overlay" class="akr-notice-overlay" hidden><section class="akr-notice-dialog" role="dialog" aria-modal="true" aria-labelledby="akr-notice-heading"><h2 id="akr-notice-heading">📢 NOWY KOMUNIKAT</h2><div id="akr-notice-date" class="akr-notice-date"></div><div id="akr-notice-title" class="akr-notice-title"></div><div id="akr-notice-body" class="akr-notice-body"></div><button id="akr-notice-ok" class="akr-notice-ok" type="button">POTWIERDZAM / ZAMKNIJ</button></section></div><script>
@@ -540,4 +573,51 @@ async function seasonRefresh(){
 }
 document.getElementById('season-refresh').addEventListener('click',seasonRefresh);
 seasonRender();seasonRefresh();
+</script><script>
+/* AKR: informacje o rajdzie pochodzą wyłącznie z publicznego API LIVE. */
+function renderEventSettings(payload){
+  if(selectedEvent!=='live')return;
+  const target=document.getElementById('akr-event-content');
+  if(!target)return;
+  const cfg=payload&&payload.ustawienia_rajdu;
+  window.akrLiveResultsEnabled=Boolean(cfg&&cfg.wyniki_live===true);
+  const resultsTab=document.getElementById('tab-rally');
+  if(resultsTab)resultsTab.hidden=!window.akrLiveResultsEnabled;
+  if(!window.akrLiveResultsEnabled && !document.getElementById('rally-view').hidden)selectAkrView('event');
+  if(!cfg||typeof cfg!=='object'){
+    target.innerHTML='<div class="akr-event-card"><h3>Informacje o rajdzie</h3><p>Oczekiwanie na publikację ustawień rajdu w API. Wyniki LIVE i archiwum działają niezależnie.</p></div>';
+    return;
+  }
+  if(cfg.pokaz_rajd!==true){
+    target.innerHTML='<div class="akr-event-card"><h3>Informacje o kolejnej imprezie</h3><p>Organizator nie opublikował jeszcze szczegółów nadchodzącego rajdu.</p></div>';
+    return;
+  }
+  const safe=typeof esc==='function'?esc:(v=>String(v??''));
+  const status=String(cfg.status||'NADCHODZACY').toUpperCase();
+  const statusLabel=status==='TRWA'?'RAJD TRWA':status==='ZAKONCZONY'?'RAJD ZAKOŃCZONY':'NADCHODZĄCY RAJD';
+  const url=(value)=>{try{const u=new URL(String(value||''));return u.protocol==='https:'?u.href:''}catch(_){return ''}};
+  const poster=url(cfg.plakat_url),rules=url(cfg.regulamin_url);
+  const actions=[];
+  if(cfg.zapisy_otwarte===true){
+    actions.push('<span class="akr-event-note">Zapisy są otwarte — formularz zgłoszeń zostanie udostępniony po uruchomieniu osobnego systemu zgłoszeń.</span>');
+  }else{
+    actions.push('<span class="akr-event-note">🔒 Zapisy obecnie zamknięte</span>');
+  }
+  if(rules)actions.push('<a class="akr-secondary" href="'+safe(rules)+'" target="_blank" rel="noopener noreferrer">📄 REGULAMIN</a>');
+  if(cfg.wyniki_live===true)actions.push('<button type="button" class="akr-secondary" id="akr-event-results-btn">🏁 WYNIKI LIVE</button>');
+  if(cfg.pokaz_liste_zgloszen===true)actions.push('<span class="akr-event-note">Lista zgłoszeń pojawi się po uruchomieniu modułu zgłoszeń.</span>');
+  const facts=[cfg.data?'📅 '+safe(cfg.data):'',cfg.miejsce?'📍 '+safe(cfg.miejsce):''].filter(Boolean).map(x=>'<span>'+x+'</span>').join('');
+  target.innerHTML='<div class="akr-event-hero"><div class="akr-event-kicker">'+safe(statusLabel)+'</div><h2>'+safe(cfg.nazwa||'Nadchodzący rajd')+'</h2>'+
+    (cfg.runda?'<div class="akr-event-round">'+safe(cfg.runda)+'</div>':'')+
+    '<div class="akr-event-facts">'+facts+'</div>'+
+    (poster?'<img class="akr-event-poster" src="'+safe(poster)+'" alt="Plakat rajdu" loading="lazy">':'')+
+    '<div class="akr-event-actions">'+actions.join('')+'</div></div>'+
+    (cfg.opis?'<details class="akr-event-card akr-expand"><summary>📝 OPIS RAJDU</summary><p>'+safe(cfg.opis)+'</p></details>':'')+
+    (cfg.harmonogram?'<details class="akr-event-card akr-expand"><summary>🕒 HARMONOGRAM</summary><p>'+safe(cfg.harmonogram)+'</p></details>':'');
+  const btn=document.getElementById('akr-event-results-btn');
+  if(btn)btn.addEventListener('click',()=>selectAkrView('rally'));
+}
+window.akrLiveResultsEnabled=false;
+document.getElementById('tab-rally').hidden=true;
+selectAkrView('event');
 </script></body></html>
