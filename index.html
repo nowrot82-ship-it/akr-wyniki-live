@@ -337,8 +337,8 @@ function load(){
 function changeEvent(value){
  if(value!=='live'&&value!=='archive-wiktoria'&&value!=='archive-dobrocin'&&value!=='archive-dobrocin-r4'&&value!=='archive-dobrocin-r3'&&value!=='archive-dobrocin-r2'&&value!=='archive-dobrocin-r1')return;
  // Wybranie dowolnej imprezy zawsze otwiera wyniki tej imprezy, nie roczną.
- selectAkrView('rally');
  selectedEvent=value;
+ selectAkrView('rally');
  eventGeneration++;
  busy=false;
  data=null;
