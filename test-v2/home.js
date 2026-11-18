@@ -329,7 +329,7 @@ function renderSettings(payload) {
 
   if (opis || harmonogram) {
     setConnection(
-      "Połączono z arkuszem USTAWIENIA_RAJDU."
+      "Połączono."
     );
   } else {
     setConnection(
