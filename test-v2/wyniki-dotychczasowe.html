@@ -4,18 +4,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#111216">
+  <meta name="theme-color" content="#101115">
+
   <title>Centrum Wyników | AKR WYNIKI LIVE 2.0</title>
 
   <style>
     :root {
       --bg: #101115;
       --panel: #1b1c21;
-      --panel-border: #303138;
+      --border: #34353c;
       --text: #ffffff;
       --muted: #a8a9b0;
       --red: #d71920;
-      --red-dark: #a90e15;
     }
 
     * {
@@ -47,16 +47,15 @@
       position: sticky;
       top: 0;
       z-index: 20;
-      background: rgba(16, 17, 21, 0.97);
+      background: rgba(16, 17, 21, 0.98);
       border-bottom: 1px solid #292a30;
-      backdrop-filter: blur(12px);
     }
 
     .header-inner {
-      max-width: 1050px;
-      min-height: 72px;
-      margin: auto;
-      padding: 12px 18px;
+      max-width: 900px;
+      min-height: 76px;
+      margin: 0 auto;
+      padding: 10px 15px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -66,42 +65,63 @@
     .brand {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       min-width: 0;
     }
 
-    .brand-mark {
-      width: 48px;
-      height: 48px;
-      display: grid;
-      place-items: center;
+    .logo-wrap {
+      width: 58px;
+      height: 58px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .akr-logo {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .logo-fallback {
+      display: none;
+      width: 54px;
+      height: 54px;
       border: 2px solid var(--red);
-      border-radius: 12px;
-      color: white;
-      font-size: 19px;
+      border-radius: 10px;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
       font-weight: 900;
       font-style: italic;
-      letter-spacing: -2px;
+    }
+
+    .brand-text {
+      min-width: 0;
     }
 
     .brand-text strong {
       display: block;
-      font-size: 15px;
-      letter-spacing: 0.5px;
+      font-size: clamp(13px, 3.8vw, 18px);
+      font-weight: 900;
+      letter-spacing: 0.3px;
     }
 
     .brand-text small {
       display: block;
-      margin-top: 4px;
+      margin-top: 5px;
       color: var(--muted);
       font-size: 10px;
+      font-weight: bold;
       letter-spacing: 1.8px;
     }
 
     .menu-button {
       width: 44px;
       height: 44px;
-      border: 1px solid var(--panel-border);
+      flex-shrink: 0;
+      border: 1px solid var(--border);
       border-radius: 10px;
       background: var(--panel);
       color: white;
@@ -111,9 +131,9 @@
 
     .menu {
       display: none;
-      max-width: 1050px;
+      max-width: 900px;
       margin: auto;
-      padding: 0 18px 16px;
+      padding: 0 15px 15px;
     }
 
     .menu.open {
@@ -122,30 +142,24 @@
 
     .menu a {
       display: block;
-      padding: 14px;
-      border-top: 1px solid var(--panel-border);
-      font-weight: bold;
+      padding: 15px 10px;
+      border-top: 1px solid var(--border);
       font-size: 13px;
-    }
-
-    .menu a:hover {
-      color: #ff4a50;
+      font-weight: bold;
     }
 
     main {
-      width: min(100% - 28px, 900px);
+      width: min(100% - 28px, 760px);
       margin: 0 auto;
-      padding: 26px 0 56px;
+      padding: 24px 0 55px;
     }
 
     .back-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
+      display: inline-block;
+      margin-bottom: 26px;
       color: var(--muted);
-      font-size: 13px;
+      font-size: 12px;
       font-weight: bold;
-      margin-bottom: 28px;
     }
 
     .back-link:hover {
@@ -153,27 +167,26 @@
     }
 
     .page-heading {
-      text-align: center;
       margin-bottom: 28px;
+      text-align: center;
     }
 
     .eyebrow {
-      color: var(--red);
+      color: #ff454b;
       font-size: 11px;
       font-weight: 900;
-      letter-spacing: 3px;
-      text-transform: uppercase;
+      letter-spacing: 2.5px;
     }
 
     h1 {
-      margin: 10px 0;
-      font-size: clamp(29px, 7vw, 48px);
+      margin: 12px 0;
+      font-size: clamp(30px, 7vw, 46px);
       font-weight: 900;
       line-height: 1.1;
-      letter-spacing: -1px;
     }
 
     .page-heading p {
+      max-width: 430px;
       margin: 10px auto 0;
       color: var(--muted);
       font-size: 14px;
@@ -181,29 +194,31 @@
     }
 
     .red-line {
-      width: 64px;
+      width: 65px;
       height: 4px;
       margin: 20px auto 0;
       background: var(--red);
-      border-radius: 5px;
+      border-radius: 4px;
     }
 
     .primary-actions {
       display: grid;
+      grid-template-columns: 1fr;
       gap: 14px;
       margin-bottom: 42px;
     }
 
     .action {
+      min-height: 100px;
+      padding: 19px 14px;
+      border-radius: 14px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: 88px;
-      padding: 18px 14px;
-      border-radius: 14px;
       text-align: center;
-      transition: transform 0.2s, background 0.2s;
+      gap: 8px;
+      transition: transform 0.2s;
     }
 
     .action:active {
@@ -211,9 +226,9 @@
     }
 
     .action-live {
-      background: linear-gradient(135deg, #f1262c, #ae1017);
-      border: 1px solid #ff3d43;
-      box-shadow: 0 10px 28px rgba(215, 25, 32, 0.2);
+      background: linear-gradient(135deg, #f1262c, #aa0d14);
+      border: 1px solid #ff4147;
+      box-shadow: 0 10px 25px rgba(215, 25, 32, 0.18);
     }
 
     .action-season {
@@ -222,18 +237,15 @@
     }
 
     .action-icon {
-      font-size: 26px;
-      margin-bottom: 6px;
+      font-size: 28px;
     }
 
     .action-title {
-      font-size: clamp(18px, 4.5vw, 24px);
+      font-size: clamp(17px, 4.5vw, 23px);
       font-weight: 900;
-      letter-spacing: 0.5px;
     }
 
     .action-subtitle {
-      margin-top: 7px;
       font-size: 11px;
       font-weight: bold;
       letter-spacing: 1px;
@@ -241,139 +253,141 @@
     }
 
     .section-heading {
-      margin-bottom: 22px;
+      margin: 0 0 24px;
       text-align: center;
     }
 
     .section-heading h2 {
       margin: 0;
-      font-size: clamp(21px, 5vw, 30px);
+      font-size: clamp(22px, 5vw, 30px);
       font-weight: 900;
-      letter-spacing: 0.5px;
     }
 
     .section-heading p {
-      margin: 9px 0 0;
+      margin: 10px 0 0;
       color: var(--muted);
       font-size: 13px;
-      line-height: 1.5;
+      line-height: 1.6;
     }
+
+    /*
+      NAJWAŻNIEJSZA ZMIANA:
+      Jeden kafelek w rzędzie.
+      Obraz bez przycinania.
+    */
 
     .archive-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
+      grid-template-columns: 1fr;
+      gap: 22px;
     }
 
     .archive-card {
       position: relative;
       display: block;
+      width: 100%;
       overflow: hidden;
-      border-radius: 13px;
+      border: 1px solid var(--border);
+      border-radius: 15px;
       background: var(--panel);
-      border: 1px solid var(--panel-border);
-      transition: border-color 0.2s, transform 0.2s;
+      transition: border-color 0.2s;
     }
 
     a.archive-card:hover {
       border-color: var(--red);
-      transform: translateY(-2px);
     }
 
     .archive-image {
-      width: 100%;
-      aspect-ratio: 1 / 1;
       display: block;
-      object-fit: cover;
+      width: 100%;
+      height: auto;
+      max-height: none;
+      object-fit: contain;
       background: #080808;
     }
 
     .archive-info {
-      min-height: 62px;
-      padding: 12px 8px;
+      padding: 17px 12px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      gap: 7px;
       text-align: center;
-      gap: 5px;
     }
 
     .archive-name {
-      font-size: clamp(12px, 3vw, 15px);
+      font-size: 18px;
       font-weight: 900;
     }
 
     .archive-status {
-      color: #b9bac1;
-      font-size: 10px;
-      font-weight: bold;
-      letter-spacing: 0.8px;
-      text-transform: uppercase;
-    }
-
-    .archive-status.ready {
       color: #ff555a;
+      font-size: 11px;
+      font-weight: bold;
+      letter-spacing: 1px;
     }
 
     .upcoming .archive-image {
-      opacity: 0.78;
+      opacity: 0.85;
     }
 
     .upcoming-label {
       position: absolute;
-      top: 12px;
-      right: 10px;
-      padding: 7px 10px;
-      border-radius: 6px;
+      top: 14px;
+      right: 14px;
+      z-index: 1;
+      padding: 9px 12px;
+      border-radius: 7px;
       background: var(--red);
       color: white;
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 900;
-      letter-spacing: 0.6px;
+    }
+
+    .upcoming .archive-status {
+      color: var(--muted);
     }
 
     .charity-section {
-      margin-top: 30px;
+      margin-top: 45px;
     }
 
     .charity-card {
       display: block;
-      max-width: 540px;
-      margin: 0 auto;
+      width: 100%;
       overflow: hidden;
       border: 1px solid #45464e;
-      border-radius: 14px;
+      border-radius: 15px;
       background: var(--panel);
-      transition: border-color 0.2s;
     }
 
     .charity-card:hover {
       border-color: var(--red);
     }
 
-    .charity-card img {
+    .charity-image {
       display: block;
       width: 100%;
-      max-height: 350px;
+      height: auto;
       object-fit: contain;
       background: #080808;
     }
 
     .charity-info {
-      padding: 17px;
+      padding: 20px 12px;
       text-align: center;
     }
 
     .charity-info strong {
       display: block;
-      font-size: 17px;
+      font-size: 19px;
       font-weight: 900;
     }
 
     .charity-info span {
       display: block;
-      margin-top: 8px;
+      margin-top: 10px;
       color: #ff555a;
       font-size: 11px;
       font-weight: bold;
@@ -381,22 +395,22 @@
     }
 
     .notice {
-      margin-top: 26px;
-      padding: 15px;
-      border: 1px solid #373840;
-      border-radius: 10px;
-      background: #1b1c21;
+      margin-top: 30px;
+      padding: 17px;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      background: var(--panel);
       color: var(--muted);
       font-size: 12px;
-      line-height: 1.7;
+      line-height: 1.8;
       text-align: center;
     }
 
     .site-footer {
-      padding: 24px 12px 32px;
+      padding: 25px 12px 35px;
       border-top: 1px solid #292a30;
-      text-align: center;
       color: #83848d;
+      text-align: center;
       font-size: 11px;
       letter-spacing: 1px;
     }
@@ -407,30 +421,32 @@
       }
 
       .archive-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 18px;
+        max-width: 640px;
+        margin: 0 auto;
       }
 
-      .archive-info {
-        min-height: 76px;
+      .charity-card {
+        max-width: 640px;
+        margin: 0 auto;
       }
     }
 
     @media (max-width: 360px) {
+      .logo-wrap {
+        width: 48px;
+        height: 48px;
+      }
+
+      .brand {
+        gap: 8px;
+      }
+
       .brand-text strong {
-        font-size: 13px;
+        font-size: 12px;
       }
 
       .brand-text small {
         font-size: 9px;
-      }
-
-      .archive-grid {
-        gap: 9px;
-      }
-
-      .archive-info {
-        padding: 10px 5px;
       }
     }
   </style>
@@ -439,14 +455,39 @@
 <body>
 
   <header class="site-header">
+
     <div class="header-inner">
 
-      <a class="brand" href="index.html" aria-label="Strona główna AKR">
-        <div class="brand-mark">AKR</div>
+      <a
+        class="brand"
+        href="index.html"
+        aria-label="AKR WYNIKI LIVE — strona główna"
+      >
+
+        <div class="logo-wrap">
+
+          <img
+            class="akr-logo"
+            id="akrLogo"
+            src="akr-logo-stoper.png"
+            alt="Logo AKR"
+          >
+
+          <div
+            class="logo-fallback"
+            id="logoFallback"
+            aria-hidden="true"
+          >
+            AKR
+          </div>
+
+        </div>
+
         <div class="brand-text">
           <strong>AKR WYNIKI LIVE</strong>
           <small>EDYCJA 2.0</small>
         </div>
+
       </a>
 
       <button
@@ -456,16 +497,24 @@
         aria-label="Otwórz menu"
         aria-expanded="false"
         aria-controls="mainMenu"
-      >☰</button>
+      >
+        ☰
+      </button>
 
     </div>
 
-    <nav class="menu" id="mainMenu" aria-label="Menu główne">
+    <nav
+      class="menu"
+      id="mainMenu"
+      aria-label="Menu główne"
+    >
       <a href="index.html">STRONA GŁÓWNA</a>
       <a href="#wyniki-live">WYNIKI LIVE</a>
       <a href="#klasyfikacja">KLASYFIKACJA ROCZNA</a>
       <a href="#archiwum">ARCHIWALNE IMPREZY</a>
+      <a href="#wiktoria">JEDZIEMY DLA WIKTORII 2</a>
     </nav>
+
   </header>
 
   <main>
@@ -475,16 +524,26 @@
     </a>
 
     <section class="page-heading">
-      <div class="eyebrow">AKR WYNIKI LIVE 2.0</div>
+
+      <div class="eyebrow">
+        AKR WYNIKI LIVE 2.0
+      </div>
+
       <h1>WYNIKI RAJDÓW</h1>
+
       <p>
         Wyniki na żywo, klasyfikacja sezonu
         i archiwum imprez rajdowych.
       </p>
+
       <div class="red-line"></div>
+
     </section>
 
-    <section class="primary-actions" aria-label="Główne wyniki">
+    <section
+      class="primary-actions"
+      aria-label="Główne wyniki"
+    >
 
       <a
         id="wyniki-live"
@@ -493,7 +552,9 @@
       >
         <span class="action-icon">🏁</span>
         <span class="action-title">WYNIKI LIVE</span>
-        <span class="action-subtitle">PRZEJDŹ DO WYNIKÓW RAJDU</span>
+        <span class="action-subtitle">
+          PRZEJDŹ DO WYNIKÓW RAJDU
+        </span>
       </a>
 
       <a
@@ -502,8 +563,12 @@
         href="wyniki-szczegoly.html?view=season"
       >
         <span class="action-icon">🏆</span>
-        <span class="action-title">DOBROCIN BARWACZ CUP 2026</span>
-        <span class="action-subtitle">KLASYFIKACJA ROCZNA</span>
+        <span class="action-title">
+          DOBROCIN BARWACZ CUP 2026
+        </span>
+        <span class="action-subtitle">
+          KLASYFIKACJA ROCZNA
+        </span>
       </a>
 
     </section>
@@ -511,147 +576,230 @@
     <section id="archiwum">
 
       <div class="section-heading">
+
         <h2>ARCHIWALNE IMPREZY</h2>
-        <p>Wybierz rundę, aby zobaczyć jej wyniki.</p>
+
+        <p>
+          Wybierz rundę, aby zobaczyć jej wyniki.
+        </p>
+
       </div>
 
       <div class="archive-grid">
 
+        <!-- RUNDA I -->
+
         <a
           class="archive-card"
           href="wyniki-szczegoly.html?event=archive-dobrocin-r1"
-          aria-label="Wyniki Dobrocin Barwacz Cup, runda 1"
         >
+
           <img
             class="archive-image"
             src="runda-1.jpg"
-            alt="Dobrocin Barwacz Cup 2026, Runda I"
+            alt="Dobrocin Barwacz Cup 2026 — Runda I"
             loading="lazy"
           >
+
           <div class="archive-info">
-            <span class="archive-name">RUNDA I</span>
-            <span class="archive-status ready">ZOBACZ WYNIKI →</span>
+            <span class="archive-name">
+              RUNDA I
+            </span>
+
+            <span class="archive-status">
+              ZOBACZ WYNIKI →
+            </span>
           </div>
+
         </a>
+
+        <!-- RUNDA II -->
 
         <a
           class="archive-card"
           href="wyniki-szczegoly.html?event=archive-dobrocin-r2"
-          aria-label="Wyniki Dobrocin Barwacz Cup, runda 2"
         >
+
           <img
             class="archive-image"
             src="runda-2.jpg"
-            alt="Dobrocin Barwacz Cup 2026, Runda II"
+            alt="Dobrocin Barwacz Cup 2026 — Runda II"
             loading="lazy"
           >
+
           <div class="archive-info">
-            <span class="archive-name">RUNDA II</span>
-            <span class="archive-status ready">ZOBACZ WYNIKI →</span>
+            <span class="archive-name">
+              RUNDA II
+            </span>
+
+            <span class="archive-status">
+              ZOBACZ WYNIKI →
+            </span>
           </div>
+
         </a>
+
+        <!-- RUNDA III -->
 
         <a
           class="archive-card"
           href="wyniki-szczegoly.html?event=archive-dobrocin-r3"
-          aria-label="Wyniki Dobrocin Barwacz Cup, runda 3"
         >
+
           <img
             class="archive-image"
             src="runda-3.jpg"
-            alt="Dobrocin Barwacz Cup 2026, Runda III"
+            alt="Dobrocin Barwacz Cup 2026 — Runda III"
             loading="lazy"
           >
+
           <div class="archive-info">
-            <span class="archive-name">RUNDA III</span>
-            <span class="archive-status ready">ZOBACZ WYNIKI →</span>
+            <span class="archive-name">
+              RUNDA III
+            </span>
+
+            <span class="archive-status">
+              ZOBACZ WYNIKI →
+            </span>
           </div>
+
         </a>
+
+        <!-- RUNDA IV -->
 
         <a
           class="archive-card"
           href="wyniki-szczegoly.html?event=archive-dobrocin-r4"
-          aria-label="Wyniki Dobrocin Barwacz Cup, runda 4"
         >
+
           <img
             class="archive-image"
             src="runda-4.jpg"
-            alt="Dobrocin Barwacz Cup 2026, Runda IV"
+            alt="Dobrocin Barwacz Cup 2026 — Runda IV"
             loading="lazy"
           >
+
           <div class="archive-info">
-            <span class="archive-name">RUNDA IV</span>
-            <span class="archive-status ready">ZOBACZ WYNIKI →</span>
+            <span class="archive-name">
+              RUNDA IV
+            </span>
+
+            <span class="archive-status">
+              ZOBACZ WYNIKI →
+            </span>
           </div>
+
         </a>
+
+        <!-- RUNDA V -->
 
         <a
           class="archive-card"
           href="wyniki-szczegoly.html?event=archive-dobrocin"
-          aria-label="Wyniki Dobrocin Barwacz Cup, runda 5"
         >
+
           <img
             class="archive-image"
             src="runda-5.jpg"
-            alt="Dobrocin Barwacz Cup 2026, Runda V"
+            alt="Dobrocin Barwacz Cup 2026 — Runda V"
             loading="lazy"
           >
+
           <div class="archive-info">
-            <span class="archive-name">RUNDA V</span>
-            <span class="archive-status ready">ZOBACZ WYNIKI →</span>
+            <span class="archive-name">
+              RUNDA V
+            </span>
+
+            <span class="archive-status">
+              ZOBACZ WYNIKI →
+            </span>
           </div>
+
         </a>
 
-        <div
-          class="archive-card upcoming"
-          aria-label="Dobrocin Barwacz Cup, runda 6, finał 12 grudnia 2026"
-        >
-          <span class="upcoming-label">WKRÓTCE</span>
+        <!-- RUNDA VI -->
+
+        <div class="archive-card upcoming">
+
+          <span class="upcoming-label">
+            WKRÓTCE
+          </span>
+
           <img
             class="archive-image"
             src="runda-6.jpg"
-            alt="Dobrocin Barwacz Cup 2026, Runda VI"
+            alt="Dobrocin Barwacz Cup 2026 — Runda VI"
             loading="lazy"
           >
+
           <div class="archive-info">
-            <span class="archive-name">RUNDA VI — FINAŁ</span>
-            <span class="archive-status">12 GRUDNIA 2026</span>
+
+            <span class="archive-name">
+              RUNDA VI — FINAŁ
+            </span>
+
+            <span class="archive-status">
+              12 GRUDNIA 2026
+            </span>
+
           </div>
+
         </div>
 
       </div>
 
     </section>
 
-    <section class="charity-section">
+    <!-- RAJD CHARYTATYWNY -->
+
+    <section
+      class="charity-section"
+      id="wiktoria"
+    >
 
       <div class="section-heading">
+
         <h2>RAJD CHARYTATYWNY ❤️</h2>
-        <p>Osobna impreza w archiwum wyników AKR.</p>
+
+        <p>
+          Jedziemy dla Wiktorii 2
+        </p>
+
       </div>
 
       <a
         class="charity-card"
         href="wyniki-szczegoly.html?event=archive-wiktoria"
-        aria-label="Wyniki rajdu Jedziemy dla Wiktorii 2"
       >
+
         <img
+          class="charity-image"
           src="wiktoria-2.jpg"
           alt="Jedziemy dla Wiktorii 2 — rajd charytatywny"
           loading="lazy"
         >
+
         <div class="charity-info">
-          <strong>JEDZIEMY DLA WIKTORII 2 ❤️</strong>
-          <span>ZOBACZ WYNIKI RAJDU →</span>
+
+          <strong>
+            JEDZIEMY DLA WIKTORII 2 ❤️
+          </strong>
+
+          <span>
+            ZOBACZ WYNIKI RAJDU →
+          </span>
+
         </div>
+
       </a>
 
     </section>
 
     <div class="notice">
-      Wyniki rund I–V oraz rajdu charytatywnego
-      są dostępne przez osobną podstronę wyników.
-      Runda VI zostanie udostępniona po rozegraniu finału.
+      Wyniki poszczególnych rajdów otwierają się
+      na osobnej podstronie.
+      Runda VI zostanie udostępniona
+      po rozegraniu finału.
     </div>
 
   </main>
@@ -668,25 +816,68 @@
       const menu = document.getElementById("mainMenu");
 
       button.addEventListener("click", function () {
+
         const isOpen = menu.classList.toggle("open");
 
-        button.setAttribute("aria-expanded", String(isOpen));
+        button.setAttribute(
+          "aria-expanded",
+          String(isOpen)
+        );
+
         button.setAttribute(
           "aria-label",
           isOpen ? "Zamknij menu" : "Otwórz menu"
         );
 
         button.textContent = isOpen ? "✕" : "☰";
+
       });
 
       menu.querySelectorAll("a").forEach(function (link) {
+
         link.addEventListener("click", function () {
+
           menu.classList.remove("open");
-          button.setAttribute("aria-expanded", "false");
-          button.setAttribute("aria-label", "Otwórz menu");
+
+          button.setAttribute(
+            "aria-expanded",
+            "false"
+          );
+
+          button.setAttribute(
+            "aria-label",
+            "Otwórz menu"
+          );
+
           button.textContent = "☰";
+
         });
+
       });
+
+      /*
+        Logo AKR:
+        Jeśli plik nie istnieje, pokaż napis AKR
+        zamiast ikony uszkodzonego obrazka.
+      */
+
+      const logo = document.getElementById("akrLogo");
+      const fallback = document.getElementById("logoFallback");
+
+      logo.addEventListener("error", function () {
+
+        logo.style.display = "none";
+        fallback.style.display = "flex";
+
+      });
+
+      if (logo.complete && logo.naturalWidth === 0) {
+
+        logo.style.display = "none";
+        fallback.style.display = "flex";
+
+      }
+
     })();
   </script>
 
