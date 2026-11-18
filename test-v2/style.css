@@ -79,18 +79,13 @@ button:disabled { cursor: not-allowed; }
 .topbar:before {
   content: "";
   position: absolute;
-  inset: -30px -25px;
+  inset: 0;
   z-index: -1;
   pointer-events: none;
-  transform: skewX(-19deg) rotate(-7deg);
-  background:
-    repeating-conic-gradient(
-      #7d7d83 0% 25%,
-      #14151a 0% 50%
-    ) 0 0 / 52px 52px;
-  opacity: .32;
-  mask-image:
-    linear-gradient(90deg, #000 0, rgba(0,0,0,.75) 48%, transparent 100%);
+  transform: none;
+  background: radial-gradient(ellipse at 25% 50%, rgba(190, 0, 30, .22), transparent 65%);
+  opacity: 1;
+  mask-image: none;
 }
 
 .topbar:after {
@@ -99,9 +94,7 @@ button:disabled { cursor: not-allowed; }
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  background:
-    linear-gradient(110deg, rgba(2,2,4,.24), transparent 45%, rgba(7,7,10,.62)),
-    linear-gradient(90deg, transparent, rgba(153,0,21,.11), transparent);
+  background: linear-gradient(100deg, rgba(28, 29, 35, .45), transparent 65%, rgba(0, 0, 0, .3));
 }
 
 .brand {
@@ -702,11 +695,6 @@ footer {
   .hamburger span {
     width: 29px;
     height: 4px;
-  }
-
-  .topbar:before {
-    background-size: 37px 37px;
-    opacity: .27;
   }
 
   /* POPRAWKA 2: NIŻSZY PRZYCISK WYNIKI */
