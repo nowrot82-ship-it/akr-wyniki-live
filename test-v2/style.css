@@ -2,3 +2,19 @@
 @media(max-width:640px){.site-shell{padding:0 12px 20px}.topbar{height:88px;gap:12px}.brand{max-width:calc(100% - 67px)}.hamburger{width:55px;height:56px;border-radius:13px;gap:6px;border-width:1px}.hamburger span{width:29px;height:4px}.results-cta{margin:10px 0 18px;min-height:106px;padding:13px 17px;gap:12px;border-radius:18px;box-shadow:inset 0 2px 5px #ffb1b144,0 6px 0 #520008,0 10px 20px #0009}.cta-stopwatch{flex-basis:49px}.cta-stopwatch svg{width:46px;height:58px}.cta-divider{height:55px;width:1px}.cta-copy strong{font-size:clamp(19px,6.3vw,32px)}.cta-copy small{font-size:clamp(11px,3.4vw,18px);letter-spacing:.19em;margin-top:5px}.cta-arrow{font-size:27px}.upcoming{margin-top:21px}.event-card{padding:18px 12px 20px;border-radius:18px;border-width:1.5px}.section-head{gap:8px;margin-bottom:20px}.section-head svg{width:25px;height:25px}.section-head span{font-size:clamp(15px,4.4vw,22px)}.slant-bars{height:17px;margin-left:2px;min-width:20px}.event-card h1{font-size:clamp(16px,5.5vw,28px);letter-spacing:-.04em}.round-line{gap:8px;margin:10px 0 18px}.round-line strong{font-size:clamp(20px,5.5vw,28px)}.round-line i{width:11%}.event-facts{gap:13px;margin-bottom:18px}.event-facts span{font-size:clamp(13px,3.9vw,18px);gap:6px}.event-facts svg{width:22px;height:22px}.event-facts em{height:22px}.poster-wrap{border-radius:12px;border-width:2px;margin-bottom:15px}.event-actions{gap:8px}.action{min-height:58px;padding:8px 9px;gap:6px;border-radius:13px;border-width:1.5px}.action svg{width:27px;height:27px}.action span{font-size:clamp(11px,3.45vw,17px)}.action b{font-size:17px}.info-panel{margin-top:17px;border-radius:15px;border-width:1.5px}.info-panel summary{padding:13px 12px;gap:10px}.info-panel svg{width:29px;height:29px}.info-panel summary>span:nth-child(2){font-size:clamp(15px,4.3vw,20px)}.chevron{width:12px;height:12px;border-width:3px}.connection{font-size:10px}footer{font-size:9px}}
 @media(max-width:360px){.site-shell{padding-left:8px;padding-right:8px}.event-card{padding-left:9px;padding-right:9px}.action{padding:7px 6px;gap:4px}.action svg{width:22px;height:22px}.action span{font-size:10px}.cta-copy strong{font-size:18px}.cta-copy small{font-size:10px}.event-card h1{font-size:16px}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+/* AKR 2.3: smuklejszy przycisk zgodnie z projektem */
+.results-cta{min-height:116px;padding:14px 30px;gap:19px;margin:12px 0 22px;border-radius:21px}
+.cta-stopwatch{flex-basis:74px}.cta-stopwatch svg{width:61px;height:74px}
+.cta-divider{height:65px}.cta-copy strong{font-size:clamp(27px,4.3vw,47px)}
+.cta-copy small{margin-top:6px;font-size:clamp(14px,2.3vw,23px)}
+.cta-arrow{font-size:33px}
+.info-panel summary{user-select:none;-webkit-tap-highlight-color:transparent}
+.info-panel summary:focus-visible{outline:2px solid #ff2739;outline-offset:-4px}
+@media(max-width:640px){
+.results-cta{min-height:74px;padding:9px 13px;gap:9px;margin:9px 0 15px;border-radius:14px}
+.cta-stopwatch{flex-basis:35px}.cta-stopwatch svg{width:33px;height:42px}
+.cta-divider{height:40px}.cta-copy strong{font-size:clamp(18px,5.5vw,28px)}
+.cta-copy small{font-size:clamp(10px,2.9vw,15px);letter-spacing:.15em;margin-top:3px}
+.cta-arrow{font-size:20px}
+}
