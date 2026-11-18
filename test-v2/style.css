@@ -169,7 +169,7 @@ button:disabled { cursor: not-allowed; }
   display: flex;
   align-items: center;
   gap: 19px;
-  min-height: 112px;
+  min-height: 80px;
   margin: 14px 0 25px;
   padding: 13px 27px;
   border: 2px solid #ff3b4c;
