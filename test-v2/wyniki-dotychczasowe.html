@@ -3,12 +3,14 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#101115">
-  <title>Centrum Wyników | AKR WYNIKI LIVE 2.0</title>
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#050506">
 
-  <!-- WSPÓLNY NAGŁÓWEK AKR -->
-  <link rel="stylesheet" href="akr-header.css?v=6">
+  <title>Wyniki Rajdów | AKR WYNIKI LIVE 2.0</title>
+
+  <!-- WSPÓLNY NAGŁÓWEK -->
+  <link rel="stylesheet" href="akr-header.css?v=8">
 
   <style>
     :root {
@@ -45,7 +47,27 @@
       font: inherit;
     }
 
-    /* ZAWARTOŚĆ STRONY */
+    /*
+      IDENTYCZNY KONTENER NAGŁÓWKA
+      JAK NA STRONIE GŁÓWNEJ
+    */
+
+    #akr-shared-header {
+      width: 100%;
+      max-width: 944px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 640px) {
+      #akr-shared-header {
+        width: calc(100% - 36px);
+      }
+    }
+
+    /*
+      CAŁA ZAWARTOŚĆ PONIŻEJ NAGŁÓWKA
+      JEST NIEZALEŻNA
+    */
 
     main {
       width: min(100% - 28px, 760px);
@@ -100,7 +122,7 @@
       border-radius: 4px;
     }
 
-    /* WYNIKI LIVE I KLASYFIKACJA */
+    /* GŁÓWNE PRZYCISKI */
 
     .primary-actions {
       display: grid;
@@ -128,14 +150,22 @@
 
     .action-live {
       min-height: 76px;
-      background: linear-gradient(115deg, #ed2028, #a80d15);
+      background: linear-gradient(
+        115deg,
+        #ed2028,
+        #a80d15
+      );
       border: 1px solid #ff4147;
       box-shadow: 0 8px 24px rgba(215,25,32,.15);
     }
 
     .action-season {
       min-height: 96px;
-      background: linear-gradient(120deg, #28292f, #191a1f);
+      background: linear-gradient(
+        120deg,
+        #28292f,
+        #191a1f
+      );
       border: 1px solid #494a52;
     }
 
@@ -194,7 +224,7 @@
       letter-spacing: 1.7px;
     }
 
-    /* ARCHIWUM RUND */
+    /* ARCHIWUM */
 
     .section-heading {
       margin: 0 0 24px;
@@ -239,7 +269,6 @@
       display: block;
       width: 100%;
       height: auto;
-      max-height: none;
       object-fit: contain;
       background: #080808;
     }
@@ -360,14 +389,11 @@
         grid-template-columns: 1fr 1fr;
       }
 
-      .archive-grid {
-        max-width: 640px;
-        margin: 0 auto;
-      }
-
+      .archive-grid,
       .charity-card {
         max-width: 640px;
-        margin: 0 auto;
+        margin-left: auto;
+        margin-right: auto;
       }
     }
 
@@ -391,8 +417,10 @@
 
 <body>
 
-  <!-- NAGŁÓWEK GENEROWANY PRZEZ akr-header.js -->
+  <!-- JEDYNY WSPÓLNY NAGŁÓWEK -->
   <div id="akr-shared-header"></div>
+
+  <!-- ZAWARTOŚĆ PODSTRONY -->
 
   <main>
 
@@ -427,16 +455,23 @@
         class="action action-live"
         href="wyniki-szczegoly.html?event=live"
       >
-        <span class="action-icon" aria-hidden="true">🏁</span>
+        <span class="action-icon" aria-hidden="true">
+          🏁
+        </span>
 
         <span class="action-content">
-          <span class="action-title">WYNIKI LIVE</span>
+          <span class="action-title">
+            WYNIKI LIVE
+          </span>
+
           <span class="action-subtitle">
             PRZEJDŹ DO WYNIKÓW RAJDU
           </span>
         </span>
 
-        <span class="action-arrow" aria-hidden="true">›</span>
+        <span class="action-arrow" aria-hidden="true">
+          ›
+        </span>
       </a>
 
       <a
@@ -444,7 +479,9 @@
         class="action action-season"
         href="wyniki-szczegoly.html?view=season"
       >
-        <span class="action-icon" aria-hidden="true">🏆</span>
+        <span class="action-icon" aria-hidden="true">
+          🏆
+        </span>
 
         <span class="action-content">
           <span class="season-label">
@@ -460,18 +497,22 @@
           </span>
         </span>
 
-        <span class="action-arrow" aria-hidden="true">›</span>
+        <span class="action-arrow" aria-hidden="true">
+          ›
+        </span>
       </a>
 
     </section>
 
-    <!-- ARCHIWUM WYNIKÓW -->
+    <!-- SZEŚĆ RUND -->
 
     <section id="archiwum">
 
       <div class="section-heading">
         <h2>ARCHIWALNE IMPREZY</h2>
-        <p>Wybierz rundę, aby zobaczyć jej wyniki.</p>
+        <p>
+          Wybierz rundę, aby zobaczyć jej wyniki.
+        </p>
       </div>
 
       <div class="archive-grid">
@@ -489,8 +530,12 @@
           >
 
           <div class="archive-info">
-            <span class="archive-name">RUNDA I</span>
-            <span class="archive-status">ZOBACZ WYNIKI →</span>
+            <span class="archive-name">
+              RUNDA I
+            </span>
+            <span class="archive-status">
+              ZOBACZ WYNIKI →
+            </span>
           </div>
         </a>
 
@@ -507,8 +552,12 @@
           >
 
           <div class="archive-info">
-            <span class="archive-name">RUNDA II</span>
-            <span class="archive-status">ZOBACZ WYNIKI →</span>
+            <span class="archive-name">
+              RUNDA II
+            </span>
+            <span class="archive-status">
+              ZOBACZ WYNIKI →
+            </span>
           </div>
         </a>
 
@@ -525,8 +574,12 @@
           >
 
           <div class="archive-info">
-            <span class="archive-name">RUNDA III</span>
-            <span class="archive-status">ZOBACZ WYNIKI →</span>
+            <span class="archive-name">
+              RUNDA III
+            </span>
+            <span class="archive-status">
+              ZOBACZ WYNIKI →
+            </span>
           </div>
         </a>
 
@@ -543,8 +596,12 @@
           >
 
           <div class="archive-info">
-            <span class="archive-name">RUNDA IV</span>
-            <span class="archive-status">ZOBACZ WYNIKI →</span>
+            <span class="archive-name">
+              RUNDA IV
+            </span>
+            <span class="archive-status">
+              ZOBACZ WYNIKI →
+            </span>
           </div>
         </a>
 
@@ -561,8 +618,12 @@
           >
 
           <div class="archive-info">
-            <span class="archive-name">RUNDA V</span>
-            <span class="archive-status">ZOBACZ WYNIKI →</span>
+            <span class="archive-name">
+              RUNDA V
+            </span>
+            <span class="archive-status">
+              ZOBACZ WYNIKI →
+            </span>
           </div>
         </a>
 
@@ -589,7 +650,6 @@
               12 GRUDNIA 2026
             </span>
           </div>
-
         </div>
 
       </div>
@@ -627,7 +687,6 @@
           </span>
         </div>
       </a>
-
     </section>
 
     <div class="notice">
@@ -643,8 +702,8 @@
     AKR WYNIKI LIVE 2.0 © 2026
   </footer>
 
-  <!-- WSPÓLNY HAMBURGER I NAWIGACJA -->
-  <script src="akr-header.js?v=6"></script>
+  <!-- TEN SAM SKRYPT CO NA STRONIE GŁÓWNEJ -->
+  <script src="akr-header.js?v=8"></script>
 
 </body>
 </html>
