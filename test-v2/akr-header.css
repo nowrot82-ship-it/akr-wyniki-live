@@ -272,3 +272,26 @@
     transition: none;
   }
 }
+
+/* AKR — JEDNOLITE CZARNE TŁO */
+
+html,
+body {
+  background: #000000 !important;
+  background-image: none !important;
+}
+
+.race-texture,
+.race-texture::before,
+.race-texture::after {
+  display: none !important;
+}
+
+.akr-topbar {
+  background: #000000 !important;
+}
+
+.akr-topbar::before,
+.akr-topbar::after {
+  display: none !important;
+}
