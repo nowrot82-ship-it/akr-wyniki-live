@@ -675,7 +675,7 @@ footer {
   }
 
   .topbar {
-    height: 84px;
+    height: 104px;
     gap: 10px;
   }
 
@@ -685,7 +685,9 @@ footer {
 
   /* POPRAWKA 1: WIĘKSZE LOGO */
   .brand img {
-    max-height: 79px;
+    max-height: 98px;
+    transform: scale(1.12);
+    transform-origin: left center;
   }
 
   .brand-fallback { font-size: 23px; }
