@@ -5,16 +5,16 @@
   <meta charset="UTF-8">
   <meta name="viewport"
         content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#050506">
+  <meta name="theme-color" content="#000000">
 
-  <title>Wyniki Rajdów | AKR WYNIKI LIVE 2.0</title>
+  <title>Wyniki dotychczasowe | AKR WYNIKI LIVE 2.0</title>
 
-  <!-- WSPÓLNY NAGŁÓWEK -->
-  <link rel="stylesheet" href="akr-header.css?v=8">
+  <!-- WSPÓLNY NAGŁÓWEK I MENU -->
+  <link rel="stylesheet" href="akr-header.css?v=10">
 
   <style>
     :root {
-      --bg: #101115;
+      --bg: #000000;
       --panel: #1b1c21;
       --border: #34353c;
       --text: #ffffff;
@@ -28,12 +28,13 @@
 
     html {
       scroll-behavior: smooth;
+      background: #000000;
     }
 
     body {
       margin: 0;
       min-height: 100vh;
-      background: var(--bg);
+      background: #000000;
       color: var(--text);
       font-family: Arial, Helvetica, sans-serif;
     }
@@ -47,10 +48,7 @@
       font: inherit;
     }
 
-    /*
-      IDENTYCZNY KONTENER NAGŁÓWKA
-      JAK NA STRONIE GŁÓWNEJ
-    */
+    /* WSPÓLNY NAGŁÓWEK */
 
     #akr-shared-header {
       width: 100%;
@@ -64,62 +62,15 @@
       }
     }
 
-    /*
-      CAŁA ZAWARTOŚĆ PONIŻEJ NAGŁÓWKA
-      JEST NIEZALEŻNA
-    */
+    /* ZAWARTOŚĆ STRONY WYNIKÓW */
 
     main {
       width: min(100% - 28px, 760px);
-      margin: 0 auto;
-      padding: 24px 0 55px;
-    }
-
-    .back-link {
-      display: inline-block;
-      margin-bottom: 26px;
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: bold;
-    }
-
-    .back-link:hover {
-      color: white;
-    }
-
-    .page-heading {
-      margin-bottom: 28px;
-      text-align: center;
-    }
-
-    .eyebrow {
-      color: #ff454b;
-      font-size: 11px;
-      font-weight: 900;
-      letter-spacing: 2.5px;
-    }
-
-    h1 {
-      margin: 12px 0;
-      font-size: clamp(30px, 7vw, 46px);
-      font-weight: 900;
-      line-height: 1.1;
-    }
-
-    .page-heading p {
-      max-width: 430px;
-      margin: 10px auto 0;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.6;
-    }
-
-    .red-line {
-      width: 65px;
-      height: 4px;
-      margin: 20px auto 0;
-      background: var(--red);
-      border-radius: 4px;
+      margin: 16px auto 30px;
+      padding: 24px 16px 40px;
+      border: 1px solid var(--red);
+      border-radius: 15px;
+      background: #000000;
     }
 
     /* GŁÓWNE PRZYCISKI */
@@ -224,7 +175,7 @@
       letter-spacing: 1.7px;
     }
 
-    /* ARCHIWUM */
+    /* ARCHIWALNE IMPREZY */
 
     .section-heading {
       margin: 0 0 24px;
@@ -316,7 +267,7 @@
       color: var(--muted);
     }
 
-    /* JEDZIEMY DLA WIKTORII */
+    /* RAJD CHARYTATYWNY */
 
     .charity-section {
       margin-top: 45px;
@@ -397,6 +348,13 @@
       }
     }
 
+    @media (max-width: 640px) {
+      main {
+        width: calc(100% - 36px);
+        padding: 20px 12px 30px;
+      }
+    }
+
     @media (max-width: 360px) {
       .action {
         gap: 10px;
@@ -420,30 +378,9 @@
   <!-- JEDYNY WSPÓLNY NAGŁÓWEK -->
   <div id="akr-shared-header"></div>
 
-  <!-- ZAWARTOŚĆ PODSTRONY -->
+  <!-- WYNIKI LIVE I KLASYFIKACJA OD RAZU POD LOGO -->
 
   <main>
-
-    <a class="back-link" href="index.html">
-      ← POWRÓT NA STRONĘ GŁÓWNĄ
-    </a>
-
-    <section class="page-heading">
-      <div class="eyebrow">
-        AKR WYNIKI LIVE 2.0
-      </div>
-
-      <h1>WYNIKI RAJDÓW</h1>
-
-      <p>
-        Wyniki na żywo, klasyfikacja sezonu
-        i archiwum imprez rajdowych.
-      </p>
-
-      <div class="red-line"></div>
-    </section>
-
-    <!-- WYNIKI LIVE I KLASYFIKACJA -->
 
     <section
       class="primary-actions"
@@ -504,7 +441,7 @@
 
     </section>
 
-    <!-- SZEŚĆ RUND -->
+    <!-- ARCHIWALNE IMPREZY -->
 
     <section id="archiwum">
 
@@ -530,9 +467,7 @@
           >
 
           <div class="archive-info">
-            <span class="archive-name">
-              RUNDA I
-            </span>
+            <span class="archive-name">RUNDA I</span>
             <span class="archive-status">
               ZOBACZ WYNIKI →
             </span>
@@ -552,9 +487,7 @@
           >
 
           <div class="archive-info">
-            <span class="archive-name">
-              RUNDA II
-            </span>
+            <span class="archive-name">RUNDA II</span>
             <span class="archive-status">
               ZOBACZ WYNIKI →
             </span>
@@ -574,9 +507,7 @@
           >
 
           <div class="archive-info">
-            <span class="archive-name">
-              RUNDA III
-            </span>
+            <span class="archive-name">RUNDA III</span>
             <span class="archive-status">
               ZOBACZ WYNIKI →
             </span>
@@ -596,9 +527,7 @@
           >
 
           <div class="archive-info">
-            <span class="archive-name">
-              RUNDA IV
-            </span>
+            <span class="archive-name">RUNDA IV</span>
             <span class="archive-status">
               ZOBACZ WYNIKI →
             </span>
@@ -618,9 +547,7 @@
           >
 
           <div class="archive-info">
-            <span class="archive-name">
-              RUNDA V
-            </span>
+            <span class="archive-name">RUNDA V</span>
             <span class="archive-status">
               ZOBACZ WYNIKI →
             </span>
@@ -661,6 +588,7 @@
       class="charity-section"
       id="wiktoria"
     >
+
       <div class="section-heading">
         <h2>RAJD CHARYTATYWNY ❤️</h2>
         <p>Jedziemy dla Wiktorii</p>
@@ -687,6 +615,7 @@
           </span>
         </div>
       </a>
+
     </section>
 
     <div class="notice">
