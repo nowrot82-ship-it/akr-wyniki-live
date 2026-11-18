@@ -1,8 +1,8 @@
 
 "use strict";
 
-// AKR WYNIKI LIVE — strona główna
-// Opis i harmonogram z USTAWIENIA_RAJDU
+// AKR WYNIKI LIVE 2.0
+// Strona główna — ustawienia rajdu z Google Sheets
 
 const EVENT_SETTINGS_API =
   "https://script.google.com/macros/s/AKfycbwtcbpTmcDbpIlW7YtfmmWJXyyg1Tgp9M-LS5CepIfh4vtdoHHicTK3MdOQQkjs9Jxb/exec";
@@ -39,6 +39,34 @@ function safeUrl(value) {
   }
 }
 
+function asText(value) {
+  if (value === null || value === undefined) return "";
+
+  if (Array.isArray(value)) {
+    return value.map(asText).filter(Boolean).join("\n");
+  }
+
+  if (typeof value === "object") {
+    return "";
+  }
+
+  return String(value).trim();
+}
+
+function isTrue(value) {
+  return value === true ||
+    value === 1 ||
+    String(value).trim().toLowerCase() === "true" ||
+    String(value).trim().toLowerCase() === "tak";
+}
+
+function isFalse(value) {
+  return value === false ||
+    value === 0 ||
+    String(value).trim().toLowerCase() === "false" ||
+    String(value).trim().toLowerCase() === "nie";
+}
+
 function jsonp(endpoint, timeoutMs = 15000) {
   return new Promise((resolve, reject) => {
     const callback =
@@ -50,10 +78,9 @@ function jsonp(endpoint, timeoutMs = 15000) {
     const script = document.createElement("script");
     let finished = false;
 
-    const timer = setTimeout(
-      () => finish(new Error("Przekroczono czas oczekiwania")),
-      timeoutMs
-    );
+    const timer = setTimeout(() => {
+      finish(new Error("JSONP: przekroczono czas oczekiwania"));
+    }, timeoutMs);
 
     function finish(error, payload) {
       if (finished) return;
@@ -61,7 +88,12 @@ function jsonp(endpoint, timeoutMs = 15000) {
       finished = true;
       clearTimeout(timer);
 
-      delete window[callback];
+      try {
+        delete window[callback];
+      } catch {
+        window[callback] = undefined;
+      }
+
       script.remove();
 
       if (error) {
@@ -73,8 +105,9 @@ function jsonp(endpoint, timeoutMs = 15000) {
 
     window[callback] = payload => finish(null, payload);
 
-    script.onerror = () =>
-      finish(new Error("Nie udało się pobrać danych"));
+    script.onerror = () => {
+      finish(new Error("JSONP: skrypt nie został załadowany"));
+    };
 
     const url = new URL(endpoint);
     url.searchParams.set("callback", callback);
@@ -85,77 +118,159 @@ function jsonp(endpoint, timeoutMs = 15000) {
   });
 }
 
+async function fetchJson(endpoint, timeoutMs = 12000) {
+  const controller = new AbortController();
+
+  const timer = setTimeout(() => {
+    controller.abort();
+  }, timeoutMs);
+
+  try {
+    const url = new URL(endpoint);
+    url.searchParams.set("t", Date.now());
+
+    const response = await fetch(url.href, {
+      method: "GET",
+      cache: "no-store",
+      redirect: "follow",
+      signal: controller.signal
+    });
+
+    if (!response.ok) {
+      throw new Error("HTTP " + response.status);
+    }
+
+    return await response.json();
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+function findSettings(payload) {
+  if (!payload || typeof payload !== "object") {
+    throw new Error("API nie zwróciło obiektu z danymi");
+  }
+
+  if (payload.ok === false) {
+    throw new Error(
+      "API zgłosiło błąd: " +
+      asText(payload.error || payload.message || "brak szczegółów")
+    );
+  }
+
+  const candidates = [
+    payload.ustawienia_rajdu,
+    payload.ustawieniaRajdu,
+    payload.settings,
+    payload.ustawienia,
+    payload.rajd,
+    payload.data?.ustawienia_rajdu,
+    payload.data?.ustawienia,
+    payload.data?.settings,
+    payload.data,
+    payload
+  ];
+
+  for (const candidate of candidates) {
+    if (!candidate || typeof candidate !== "object") {
+      continue;
+    }
+
+    if (
+      "opis" in candidate ||
+      "harmonogram" in candidate ||
+      "nazwa" in candidate ||
+      "plakat_url" in candidate ||
+      "pokaz_rajd" in candidate
+    ) {
+      return candidate;
+    }
+  }
+
+  const keys = Object.keys(payload).slice(0, 12).join(", ");
+
+  throw new Error(
+    "Nie znaleziono ustawień rajdu. Pola API: " +
+    (keys || "brak")
+  );
+}
+
+function setConnection(message) {
+  const element = $("connection");
+
+  if (element) {
+    element.textContent = message;
+  }
+}
+
 function renderSettings(payload) {
-  const cfg = payload?.ustawienia_rajdu;
+  const cfg = findSettings(payload);
 
-  if (!cfg || typeof cfg !== "object") {
-    throw new Error("API nie zwróciło USTAWIENIA_RAJDU");
-  }
-
-  if (cfg.pokaz_rajd === false) {
-    $("connection").textContent =
-      "Organizator nie opublikował jeszcze nowego wydarzenia.";
+  if (isFalse(cfg.pokaz_rajd)) {
+    setConnection(
+      "Organizator nie opublikował jeszcze nowego wydarzenia."
+    );
     return;
   }
 
-  // Nie wyświetlamy danych Wiktorii w karcie Dobrocina.
+  const name = asText(cfg.nazwa);
+
+  // Nie podmieniamy karty Dobrocina danymi innego rajdu.
   if (
-    cfg.nazwa &&
-    !String(cfg.nazwa)
-      .toLocaleLowerCase("pl")
-      .includes("dobrocin")
+    name &&
+    !name.toLocaleLowerCase("pl").includes("dobrocin")
   ) {
-    $("connection").textContent =
-      "API zwróciło inne wydarzenie. Zachowano kartę Dobrocina.";
+    setConnection(
+      "API zwróciło inne wydarzenie: " +
+      name +
+      ". Zachowano kartę Dobrocina."
+    );
     return;
   }
 
-  // Podstawowe informacje o wydarzeniu
-  if (cfg.nazwa) {
-    $("event-title").textContent = String(cfg.nazwa);
+  const title = $("event-title");
+  const round = $("event-round");
+  const date = $("event-date");
+  const place = $("event-place");
+
+  if (name && title) {
+    title.textContent = name;
   }
 
-  if (cfg.runda) {
-    $("event-round").textContent = String(cfg.runda);
+  if (cfg.runda && round) {
+    round.textContent = asText(cfg.runda);
   }
 
-  if (cfg.data) {
-    $("event-date").textContent = String(cfg.data);
+  if (cfg.data && date) {
+    date.textContent = asText(cfg.data);
   }
 
-  if (cfg.miejsce) {
-    $("event-place").textContent = String(cfg.miejsce);
+  if (cfg.miejsce && place) {
+    place.textContent = asText(cfg.miejsce);
   }
 
-  // Plakat z ustawień rajdu
   const poster = safeUrl(cfg.plakat_url);
 
-  const isDobrocin = String(cfg.nazwa || "")
-    .toLocaleLowerCase("pl")
-    .includes("dobrocin");
-
-  if (poster && isDobrocin) {
+  if (poster && $("event-poster")) {
     $("event-poster").src = poster;
   }
 
-  // Regulamin
   const rules = safeUrl(cfg.regulamin_url);
+  const regulations = $("regulations");
 
-  if (rules) {
-    const element = $("regulations");
-
-    element.href = rules;
-    element.target = "_blank";
-    element.rel = "noopener noreferrer";
-    element.removeAttribute("aria-disabled");
+  if (rules && regulations) {
+    regulations.href = rules;
+    regulations.target = "_blank";
+    regulations.rel = "noopener noreferrer";
+    regulations.removeAttribute("aria-disabled");
   }
 
-  // Zapisy
   const registration = $("registration");
 
   if (
-    cfg.zapisy_otwarte === true &&
-    registration?.tagName === "BUTTON"
+    isTrue(cfg.zapisy_otwarte) &&
+    registration &&
+    registration.tagName === "BUTTON"
   ) {
     const link = document.createElement("a");
 
@@ -173,57 +288,120 @@ function renderSettings(payload) {
     registration.replaceWith(link);
   }
 
-  if (cfg.pokaz_liste_zgloszen === false) {
+  if (isFalse(cfg.pokaz_liste_zgloszen) && $("entries")) {
     $("entries").disabled = true;
     $("entries").setAttribute("aria-disabled", "true");
   }
 
-  // OPIS WYDARZENIA I HARMONOGRAM
-  // Oba pola są odczytywane z USTAWIENIA_RAJDU.
+  // OPIS WYDARZENIA Z ARKUSZA
 
   const description = $("description-text");
   const schedule = $("schedule-text");
 
-  const opis = String(cfg.opis ?? "").trim();
-  const harmonogram = String(cfg.harmonogram ?? "").trim();
+  const opis = asText(
+    cfg.opis ??
+    cfg.opis_wydarzenia ??
+    cfg.opis_rajdu ??
+    cfg.description
+  );
 
-  description.textContent =
-    opis ||
-    "Organizator nie opublikował jeszcze opisu wydarzenia.";
+  const harmonogram = asText(
+    cfg.harmonogram ??
+    cfg.program ??
+    cfg.schedule
+  );
 
-  schedule.textContent = harmonogram
-    ? "HARMONOGRAM\n" + harmonogram
-    : "";
+  if (description) {
+    description.textContent =
+      opis ||
+      "W ustawieniach rajdu nie znaleziono opisu wydarzenia.";
 
-  $("connection").textContent =
-    "Informacje wydarzenia pobrane z USTAWIENIA_RAJDU.";
+    description.style.whiteSpace = "pre-line";
+  }
+
+  if (schedule) {
+    schedule.textContent = harmonogram
+      ? "HARMONOGRAM\n" + harmonogram
+      : "";
+
+    schedule.style.whiteSpace = "pre-line";
+  }
+
+  if (opis || harmonogram) {
+    setConnection(
+      "Połączono z arkuszem USTAWIENIA_RAJDU."
+    );
+  } else {
+    setConnection(
+      "Połączono z API, ale pola opis i harmonogram są puste " +
+      "lub nie zostały udostępnione."
+    );
+  }
 }
 
-// Właściwy plakat Dobrocina
-$("event-poster").src = POSTER_FALLBACK;
+async function loadEventSettings() {
+  setConnection("Łączenie z ustawieniami organizatora…");
 
-$("event-poster").addEventListener("error", () => {
-  $("connection").textContent =
-    "Nie można wyświetlić plakatu z Google Drive.";
-});
+  const errors = [];
 
-// Pobieranie ustawień z Google Sheets przez Apps Script
-if (EVENT_SETTINGS_API) {
-  jsonp(EVENT_SETTINGS_API)
-    .then(renderSettings)
-    .catch(() => {
-      $("connection").textContent =
-        "Nie udało się pobrać ustawień rajdu z Google.";
-    });
+  try {
+    const payload = await fetchJson(EVENT_SETTINGS_API);
+    renderSettings(payload);
+    return;
+  } catch (error) {
+    errors.push("JSON: " + error.message);
+  }
+
+  try {
+    const payload = await jsonp(EVENT_SETTINGS_API);
+    renderSettings(payload);
+    return;
+  } catch (error) {
+    errors.push("JSONP: " + error.message);
+  }
+
+  setConnection(
+    "Nie udało się pobrać ustawień rajdu. " +
+    errors.join(" | ")
+  );
+
+  const description = $("description-text");
+
+  if (description) {
+    description.textContent =
+      "Opis nie został pobrany z arkusza. " +
+      "Szczegóły błędu znajdują się pod kartą wydarzenia.";
+  }
 }
+
+// PLAKAT
+
+const eventPoster = $("event-poster");
+
+if (eventPoster) {
+  eventPoster.src = POSTER_FALLBACK;
+
+  eventPoster.addEventListener("error", () => {
+    setConnection(
+      "Nie można wyświetlić plakatu z Google Drive."
+    );
+  });
+}
+
+// START POBIERANIA USTAWIEŃ
+
+loadEventSettings();
 
 // MENU MOBILNE
 
 const overlay = $("menu-overlay");
 const panel = $("menu-panel");
 const openBtn = $("open-menu");
+const closeBtn = $("close-menu");
 
 function toggleMenu(open) {
+  if (!overlay || !panel || !openBtn) return;
+
   overlay.hidden = !open;
 
   panel.classList.toggle("open", open);
@@ -233,107 +411,150 @@ function toggleMenu(open) {
 
   document.body.style.overflow = open ? "hidden" : "";
 
-  (open ? $("close-menu") : openBtn).focus();
+  const focusTarget = open ? closeBtn : openBtn;
+
+  if (focusTarget) {
+    focusTarget.focus();
+  }
 }
 
-openBtn.addEventListener("click", () => toggleMenu(true));
+if (openBtn) {
+  openBtn.addEventListener("click", () => {
+    toggleMenu(true);
+  });
+}
 
-$("close-menu").addEventListener(
-  "click",
-  () => toggleMenu(false)
-);
+if (closeBtn) {
+  closeBtn.addEventListener("click", () => {
+    toggleMenu(false);
+  });
+}
 
-overlay.addEventListener(
-  "click",
-  () => toggleMenu(false)
-);
+if (overlay) {
+  overlay.addEventListener("click", () => {
+    toggleMenu(false);
+  });
+}
 
-// OKNO LISTY ZGŁOSZEŃ
+// LISTA ZGŁOSZEŃ
 
 const dialog = $("entries-dialog");
 
 function closeDialog() {
-  dialog.hidden = true;
+  if (dialog) {
+    dialog.hidden = true;
+  }
 }
 
-$("entries-close").addEventListener(
-  "click",
-  closeDialog
-);
+const entriesClose = $("entries-close");
 
-dialog.addEventListener("click", event => {
-  if (event.target === dialog) {
-    closeDialog();
-  }
-});
+if (entriesClose) {
+  entriesClose.addEventListener("click", closeDialog);
+}
+
+if (dialog) {
+  dialog.addEventListener("click", event => {
+    if (event.target === dialog) {
+      closeDialog();
+    }
+  });
+}
 
 document.addEventListener("keydown", event => {
   if (event.key === "Escape") {
-    if (!dialog.hidden) {
+    if (dialog && !dialog.hidden) {
       closeDialog();
     }
 
-    if (panel.classList.contains("open")) {
+    if (panel && panel.classList.contains("open")) {
       toggleMenu(false);
     }
   }
 });
 
-$("entries").addEventListener("click", async () => {
-  dialog.hidden = false;
+const entriesButton = $("entries");
 
-  $("entries-list").innerHTML = "";
-  $("entries-status").textContent =
-    "Pobieranie potwierdzonych zgłoszeń…";
+if (entriesButton) {
+  entriesButton.addEventListener("click", async () => {
+    if (!dialog) return;
 
-  try {
-    const payload = await jsonp(ENTRIES_API);
+    dialog.hidden = false;
 
-    if (
-      payload?.ok !== true ||
-      !Array.isArray(payload.crews)
-    ) {
-      throw new Error("Nieprawidłowa odpowiedź API");
+    const list = $("entries-list");
+    const status = $("entries-status");
+
+    if (list) {
+      list.innerHTML = "";
     }
 
-    $("entries-status").textContent =
-      "Potwierdzone zgłoszenia: " + payload.crews.length;
+    if (status) {
+      status.textContent =
+        "Pobieranie potwierdzonych zgłoszeń…";
+    }
 
-    $("entries-list").innerHTML =
-      payload.crews.map(crew => `
-        <div class="entry">
-          <strong>${esc(crew.kierowca)}</strong>
-          <div>${esc(crew.pilot)}</div>
-          <small>
-            ${esc(crew.samochod)} • ${esc(crew.klasa)}
-          </small>
-        </div>
-      `).join("") ||
-      "<p>Brak potwierdzonych zgłoszeń.</p>";
+    try {
+      const payload = await jsonp(ENTRIES_API);
 
-  } catch {
-    $("entries-status").textContent =
-      "Nie udało się pobrać zgłoszeń. Spróbuj ponownie.";
-  }
-});
+      if (
+        payload?.ok !== true ||
+        !Array.isArray(payload.crews)
+      ) {
+        throw new Error("Nieprawidłowa odpowiedź API");
+      }
 
-// Blokada regulaminu bez poprawnego linku
-$("regulations").addEventListener("click", event => {
-  if (
-    $("regulations").getAttribute("aria-disabled") === "true"
-  ) {
-    event.preventDefault();
-  }
-});
+      if (status) {
+        status.textContent =
+          "Potwierdzone zgłoszenia: " +
+          payload.crews.length;
+      }
 
-// Awaryjny napis, jeśli obraz logo się nie załaduje
+      if (list) {
+        list.innerHTML =
+          payload.crews.map(crew => `
+            <div class="entry">
+              <strong>${esc(crew.kierowca)}</strong>
+              <div>${esc(crew.pilot)}</div>
+              <small>
+                ${esc(crew.samochod)} • ${esc(crew.klasa)}
+              </small>
+            </div>
+          `).join("") ||
+          "<p>Brak potwierdzonych zgłoszeń.</p>";
+      }
+
+    } catch {
+      if (status) {
+        status.textContent =
+          "Nie udało się pobrać zgłoszeń. Spróbuj ponownie.";
+      }
+    }
+  });
+}
+
+// REGULAMIN
+
+const regulationsLink = $("regulations");
+
+if (regulationsLink) {
+  regulationsLink.addEventListener("click", event => {
+    if (
+      regulationsLink.getAttribute("aria-disabled") === "true"
+    ) {
+      event.preventDefault();
+    }
+  });
+}
+
+// AWARYJNE LOGO
+
 const logo = document.querySelector(".brand img");
 
 if (logo) {
   logo.addEventListener("error", () => {
     logo.hidden = true;
 
-    const fallback = document.querySelector(".brand-fallback");
+    const fallback =
+      document.querySelector(".brand-fallback");
 
     if (fallback) {
       fallback.style.display = "block";
