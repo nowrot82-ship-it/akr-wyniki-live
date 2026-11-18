@@ -1,8 +1,8 @@
 
 /*
  AKR WYNIKI LIVE 2.0
- WSPÓLNY NAGŁÓWEK I MENU
- Wersja 7
+ JEDEN WSPOLNY NAGLOWEK
+ WERSJA 8
 */
 
 .akr-topbar {
@@ -121,7 +121,7 @@
   box-shadow: 0 1px 5px #ffffff44;
 }
 
-/* MENU — TŁO */
+/* PRZYCIEMNIENIE ZA MENU */
 
 .akr-menu-overlay {
   position: fixed;
@@ -134,7 +134,7 @@
   display: none !important;
 }
 
-/* MENU — PANEL */
+/* PANEL MENU */
 
 .akr-menu-panel {
   position: fixed;
@@ -156,10 +156,14 @@
   display: flex;
   flex-direction: column;
   color: #fff;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .akr-menu-panel.open {
   transform: translateX(0);
+  visibility: visible;
+  pointer-events: auto;
 }
 
 .akr-menu-top {
@@ -228,11 +232,9 @@
   letter-spacing: .13em;
 }
 
-/* IPHONE — IDENTYCZNE WYMIARY
-   JAK NA STRONIE GŁÓWNEJ */
+/* IPHONE */
 
 @media (max-width: 640px) {
-
   .akr-topbar {
     height: 104px;
     gap: 10px;
