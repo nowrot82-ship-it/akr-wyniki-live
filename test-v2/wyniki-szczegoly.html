@@ -232,8 +232,12 @@ body{display:flex;flex-direction:column;min-height:100dvh;height:100dvh;overflow
 @media(max-width:640px){#akr-shared-header{width:calc(100% - 36px)}.wrap{padding:3px 8px 6px}.wrap>.sticky-top .event-name{font-size:clamp(15px,4vw,20px)}.akr-event-picker label{font-size:10px}}
 @media(max-height:700px){.wrap>.sticky-top .mast{padding:2px 0}.view-tab{padding:5px 2px}}
 /* AKR 2.0: tylko szczegóły rund archiwalnych — bez starego menu. */
-body.akr-archive-details .akr-event-picker,
 body.akr-archive-details .view-tabs { display:none!important; }
+/* Lista archiwalnych imprez zostaje widoczna, bez starego paska zakładek. */
+body.akr-archive-details .akr-event-picker { display:flex!important; align-items:center; gap:9px; margin:5px 0 7px; padding:9px 10px; background:#121212; border:1px solid #9e2029; border-radius:10px; }
+body.akr-archive-details .akr-event-picker label { font-size:11px; font-weight:900; letter-spacing:.5px; color:#fff; }
+body.akr-archive-details .akr-event-picker select { min-width:0; flex:1; padding:10px 8px; border:1px solid #5f3236; border-radius:8px; background:#242424; color:#fff; font-size:12px; }
+@media(max-width:420px){body.akr-archive-details .akr-event-picker{padding:7px;gap:6px}body.akr-archive-details .akr-event-picker label{font-size:10px}body.akr-archive-details .akr-event-picker select{font-size:11px}}
 body.akr-archive-details .wrap>.sticky-top .mast h1,
 body.akr-archive-details .wrap>.sticky-top .mast small { display:none!important; }
 body.akr-archive-details .wrap>.sticky-top .mast { padding:5px 0 9px; }
