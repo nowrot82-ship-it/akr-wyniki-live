@@ -5,7 +5,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#101115">
-
   <title>Centrum Wyników | AKR WYNIKI LIVE 2.0</title>
 
   <style>
@@ -204,21 +203,21 @@
     .primary-actions {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 14px;
+      gap: 13px;
       margin-bottom: 42px;
     }
 
     .action {
-      min-height: 100px;
-      padding: 19px 14px;
-      border-radius: 14px;
+      position: relative;
+      overflow: hidden;
       display: flex;
-      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      text-align: center;
-      gap: 8px;
-      transition: transform 0.2s;
+      gap: 15px;
+      width: 100%;
+      min-height: 82px;
+      padding: 16px 19px;
+      border-radius: 14px;
+      transition: transform 0.2s, border-color 0.2s;
     }
 
     .action:active {
@@ -226,30 +225,71 @@
     }
 
     .action-live {
-      background: linear-gradient(135deg, #f1262c, #aa0d14);
+      min-height: 76px;
+      background: linear-gradient(115deg, #ed2028, #a80d15);
       border: 1px solid #ff4147;
-      box-shadow: 0 10px 25px rgba(215, 25, 32, 0.18);
+      box-shadow: 0 8px 24px rgba(215, 25, 32, 0.15);
     }
 
     .action-season {
-      background: #222329;
-      border: 1px solid #484950;
+      min-height: 96px;
+      background: linear-gradient(120deg, #28292f, #191a1f);
+      border: 1px solid #494a52;
+    }
+
+    .action-season::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 5px;
+      background: var(--red);
     }
 
     .action-icon {
-      font-size: 28px;
+      flex: 0 0 43px;
+      display: grid;
+      place-items: center;
+      font-size: 27px;
+    }
+
+    .action-content {
+      min-width: 0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+      text-align: left;
     }
 
     .action-title {
-      font-size: clamp(17px, 4.5vw, 23px);
+      font-size: clamp(17px, 4.5vw, 22px);
       font-weight: 900;
+      line-height: 1.2;
     }
 
     .action-subtitle {
-      font-size: 11px;
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 10px;
       font-weight: bold;
       letter-spacing: 1px;
-      opacity: 0.85;
+      line-height: 1.4;
+    }
+
+    .action-arrow {
+      flex-shrink: 0;
+      font-size: 25px;
+      font-weight: bold;
+      opacity: 0.8;
+    }
+
+    .season-label {
+      color: #ff555a;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 1.7px;
     }
 
     .section-heading {
@@ -269,12 +309,6 @@
       font-size: 13px;
       line-height: 1.6;
     }
-
-    /*
-      NAJWAŻNIEJSZA ZMIANA:
-      Jeden kafelek w rzędzie.
-      Obraz bez przycinania.
-    */
 
     .archive-grid {
       display: grid;
@@ -448,6 +482,20 @@
       .brand-text small {
         font-size: 9px;
       }
+
+      .action {
+        gap: 10px;
+        padding: 14px 12px;
+      }
+
+      .action-icon {
+        flex-basis: 35px;
+        font-size: 23px;
+      }
+
+      .action-title {
+        font-size: 16px;
+      }
     }
   </style>
 </head>
@@ -455,7 +503,6 @@
 <body>
 
   <header class="site-header">
-
     <div class="header-inner">
 
       <a
@@ -463,13 +510,11 @@
         href="index.html"
         aria-label="AKR WYNIKI LIVE — strona główna"
       >
-
         <div class="logo-wrap">
-
           <img
             class="akr-logo"
             id="akrLogo"
-            src="akr-logo-stoper.png"
+            src="../akr-logo-stoper.png"
             alt="Logo AKR"
           >
 
@@ -480,14 +525,12 @@
           >
             AKR
           </div>
-
         </div>
 
         <div class="brand-text">
           <strong>AKR WYNIKI LIVE</strong>
           <small>EDYCJA 2.0</small>
         </div>
-
       </a>
 
       <button
@@ -512,9 +555,8 @@
       <a href="#wyniki-live">WYNIKI LIVE</a>
       <a href="#klasyfikacja">KLASYFIKACJA ROCZNA</a>
       <a href="#archiwum">ARCHIWALNE IMPREZY</a>
-      <a href="#wiktoria">JEDZIEMY DLA WIKTORII 2</a>
+      <a href="#wiktoria">JEDZIEMY DLA WIKTORII</a>
     </nav>
-
   </header>
 
   <main>
@@ -524,7 +566,6 @@
     </a>
 
     <section class="page-heading">
-
       <div class="eyebrow">
         AKR WYNIKI LIVE 2.0
       </div>
@@ -537,7 +578,6 @@
       </p>
 
       <div class="red-line"></div>
-
     </section>
 
     <section
@@ -550,11 +590,16 @@
         class="action action-live"
         href="wyniki-szczegoly.html?event=live"
       >
-        <span class="action-icon">🏁</span>
-        <span class="action-title">WYNIKI LIVE</span>
-        <span class="action-subtitle">
-          PRZEJDŹ DO WYNIKÓW RAJDU
+        <span class="action-icon" aria-hidden="true">🏁</span>
+
+        <span class="action-content">
+          <span class="action-title">WYNIKI LIVE</span>
+          <span class="action-subtitle">
+            PRZEJDŹ DO WYNIKÓW RAJDU
+          </span>
         </span>
+
+        <span class="action-arrow" aria-hidden="true">›</span>
       </a>
 
       <a
@@ -562,13 +607,23 @@
         class="action action-season"
         href="wyniki-szczegoly.html?view=season"
       >
-        <span class="action-icon">🏆</span>
-        <span class="action-title">
-          DOBROCIN BARWACZ CUP 2026
+        <span class="action-icon" aria-hidden="true">🏆</span>
+
+        <span class="action-content">
+          <span class="season-label">
+            KLASYFIKACJA ROCZNA
+          </span>
+
+          <span class="action-title">
+            DOBROCIN BARWACZ CUP 2026
+          </span>
+
+          <span class="action-subtitle">
+            PUNKTACJA I TABELA SEZONU
+          </span>
         </span>
-        <span class="action-subtitle">
-          KLASYFIKACJA ROCZNA
-        </span>
+
+        <span class="action-arrow" aria-hidden="true">›</span>
       </a>
 
     </section>
@@ -576,24 +631,17 @@
     <section id="archiwum">
 
       <div class="section-heading">
-
         <h2>ARCHIWALNE IMPREZY</h2>
-
-        <p>
-          Wybierz rundę, aby zobaczyć jej wyniki.
-        </p>
-
+        <p>Wybierz rundę, aby zobaczyć jej wyniki.</p>
       </div>
 
       <div class="archive-grid">
 
         <!-- RUNDA I -->
-
         <a
           class="archive-card"
           href="wyniki-szczegoly.html?event=archive-dobrocin-r1"
         >
-
           <img
             class="archive-image"
             src="runda-1.jpg"
@@ -602,24 +650,16 @@
           >
 
           <div class="archive-info">
-            <span class="archive-name">
-              RUNDA I
-            </span>
-
-            <span class="archive-status">
-              ZOBACZ WYNIKI →
-            </span>
+            <span class="archive-name">RUNDA I</span>
+            <span class="archive-status">ZOBACZ WYNIKI →</span>
           </div>
-
         </a>
 
         <!-- RUNDA II -->
-
         <a
           class="archive-card"
           href="wyniki-szczegoly.html?event=archive-dobrocin-r2"
         >
-
           <img
             class="archive-image"
             src="runda-2.jpg"
@@ -628,24 +668,16 @@
           >
 
           <div class="archive-info">
-            <span class="archive-name">
-              RUNDA II
-            </span>
-
-            <span class="archive-status">
-              ZOBACZ WYNIKI →
-            </span>
+            <span class="archive-name">RUNDA II</span>
+            <span class="archive-status">ZOBACZ WYNIKI →</span>
           </div>
-
         </a>
 
         <!-- RUNDA III -->
-
         <a
           class="archive-card"
           href="wyniki-szczegoly.html?event=archive-dobrocin-r3"
         >
-
           <img
             class="archive-image"
             src="runda-3.jpg"
@@ -654,24 +686,16 @@
           >
 
           <div class="archive-info">
-            <span class="archive-name">
-              RUNDA III
-            </span>
-
-            <span class="archive-status">
-              ZOBACZ WYNIKI →
-            </span>
+            <span class="archive-name">RUNDA III</span>
+            <span class="archive-status">ZOBACZ WYNIKI →</span>
           </div>
-
         </a>
 
         <!-- RUNDA IV -->
-
         <a
           class="archive-card"
           href="wyniki-szczegoly.html?event=archive-dobrocin-r4"
         >
-
           <img
             class="archive-image"
             src="runda-4.jpg"
@@ -680,24 +704,16 @@
           >
 
           <div class="archive-info">
-            <span class="archive-name">
-              RUNDA IV
-            </span>
-
-            <span class="archive-status">
-              ZOBACZ WYNIKI →
-            </span>
+            <span class="archive-name">RUNDA IV</span>
+            <span class="archive-status">ZOBACZ WYNIKI →</span>
           </div>
-
         </a>
 
         <!-- RUNDA V -->
-
         <a
           class="archive-card"
           href="wyniki-szczegoly.html?event=archive-dobrocin"
         >
-
           <img
             class="archive-image"
             src="runda-5.jpg"
@@ -706,19 +722,12 @@
           >
 
           <div class="archive-info">
-            <span class="archive-name">
-              RUNDA V
-            </span>
-
-            <span class="archive-status">
-              ZOBACZ WYNIKI →
-            </span>
+            <span class="archive-name">RUNDA V</span>
+            <span class="archive-status">ZOBACZ WYNIKI →</span>
           </div>
-
         </a>
 
         <!-- RUNDA VI -->
-
         <div class="archive-card upcoming">
 
           <span class="upcoming-label">
@@ -733,7 +742,6 @@
           >
 
           <div class="archive-info">
-
             <span class="archive-name">
               RUNDA VI — FINAŁ
             </span>
@@ -741,13 +749,10 @@
             <span class="archive-status">
               12 GRUDNIA 2026
             </span>
-
           </div>
-
         </div>
 
       </div>
-
     </section>
 
     <!-- RAJD CHARYTATYWNY -->
@@ -758,39 +763,30 @@
     >
 
       <div class="section-heading">
-
         <h2>RAJD CHARYTATYWNY ❤️</h2>
-
-        <p>
-          Jedziemy dla Wiktorii 2
-        </p>
-
+        <p>Jedziemy dla Wiktorii</p>
       </div>
 
       <a
         class="charity-card"
         href="wyniki-szczegoly.html?event=archive-wiktoria"
       >
-
         <img
           class="charity-image"
           src="wiktoria-2.jpg"
-          alt="Jedziemy dla Wiktorii 2 — rajd charytatywny"
+          alt="Jedziemy dla Wiktorii — rajd charytatywny"
           loading="lazy"
         >
 
         <div class="charity-info">
-
           <strong>
-            JEDZIEMY DLA WIKTORII 2 ❤️
+            JEDZIEMY DLA WIKTORII ❤️
           </strong>
 
           <span>
             ZOBACZ WYNIKI RAJDU →
           </span>
-
         </div>
-
       </a>
 
     </section>
@@ -816,7 +812,6 @@
       const menu = document.getElementById("mainMenu");
 
       button.addEventListener("click", function () {
-
         const isOpen = menu.classList.toggle("open");
 
         button.setAttribute(
@@ -830,54 +825,31 @@
         );
 
         button.textContent = isOpen ? "✕" : "☰";
-
       });
 
       menu.querySelectorAll("a").forEach(function (link) {
-
         link.addEventListener("click", function () {
-
           menu.classList.remove("open");
 
-          button.setAttribute(
-            "aria-expanded",
-            "false"
-          );
-
-          button.setAttribute(
-            "aria-label",
-            "Otwórz menu"
-          );
-
+          button.setAttribute("aria-expanded", "false");
+          button.setAttribute("aria-label", "Otwórz menu");
           button.textContent = "☰";
-
         });
-
       });
-
-      /*
-        Logo AKR:
-        Jeśli plik nie istnieje, pokaż napis AKR
-        zamiast ikony uszkodzonego obrazka.
-      */
 
       const logo = document.getElementById("akrLogo");
       const fallback = document.getElementById("logoFallback");
 
-      logo.addEventListener("error", function () {
-
+      function showLogoFallback() {
         logo.style.display = "none";
         fallback.style.display = "flex";
-
-      });
-
-      if (logo.complete && logo.naturalWidth === 0) {
-
-        logo.style.display = "none";
-        fallback.style.display = "flex";
-
       }
 
+      logo.addEventListener("error", showLogoFallback);
+
+      if (logo.complete && logo.naturalWidth === 0) {
+        showLogoFallback();
+      }
     })();
   </script>
 
