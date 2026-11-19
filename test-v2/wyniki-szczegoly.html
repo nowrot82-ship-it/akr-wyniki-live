@@ -813,8 +813,25 @@ selectAkrView('event');
     'archive-dobrocin-r1', 'archive-dobrocin-r2',
     'archive-dobrocin-r3', 'archive-dobrocin-r4'
   ]);
-  if (view === 'season') {
-    selectAkrView('season');
+  // Widok z linku ma pierwszeństwo: hamburger i przyciski mogą otwierać
+  // listę startową / komunikaty bez wracania do panelu wyników.
+  const viewAliases = {
+    'startlist':'startlist', 'lista-startowa':'startlist', 'lista_startowa':'startlist',
+    'announcements':'announcements', 'komunikaty':'announcements',
+    'entries':'entries', 'zgloszenia':'entries',
+    'season':'season', 'klasyfikacja-roczna':'season',
+    'rally':'rally', 'results':'rally', 'wyniki':'rally', 'live':'rally'
+  };
+  const requestedView = viewAliases[String(view || '').toLowerCase()] || null;
+  if (requestedView && requestedView !== 'rally') {
+    if (event && allowedEvents.has(event)) {
+      document.getElementById('akr-event-select').value = event;
+      document.body.classList.toggle('akr-live-details', event === 'live');
+      document.body.classList.toggle('akr-archive-details', event !== 'live');
+      if (event !== 'live') changeEvent(event);
+    }
+    selectAkrView(requestedView);
+    if (requestedView === 'entries' && typeof window.akrLoadEntries === 'function') window.akrLoadEntries();
   } else if (event && allowedEvents.has(event)) {
     if (event === 'live') {
       document.getElementById('akr-event-select').value = 'live';
