@@ -832,59 +832,87 @@ selectAkrView('event');
 })();
 </script>
 <script src="akr-header.js?v=8"></script>
-<style id="akr-fixed-controls-v3">
-/* Wersja mobilna: po dojściu do góry zostaje wyłącznie panel OS / klasa / NA-PO. */
-body.akr-archive-details #rally-view > .sticky-top.akr-controls-fixed,
-body.akr-live-details #rally-view > .sticky-top.akr-controls-fixed {
-  position:fixed!important;top:0!important;z-index:9999!important;
-  margin:0!important;background:#000!important;
-  box-shadow:0 5px 14px #000!important;
-  box-sizing:border-box!important;
+
+
+<style id="akr-sticky-final">
+/* Jeden przewijany dokument, bez wewnętrznych obszarów scroll. */
+html:has(body.akr-archive-details), html:has(body.akr-live-details) {
+ height:auto!important; min-height:100%!important; overflow-x:clip!important; overflow-y:visible!important;
 }
-.akr-controls-spacer {display:none;height:0;pointer-events:none}
-.akr-controls-spacer.akr-controls-spacer-on {display:block}
+body.akr-archive-details, body.akr-live-details {
+ height:auto!important; min-height:100vh!important; min-height:100dvh!important;
+ overflow-x:clip!important; overflow-y:visible!important; display:block!important;
+}
+body.akr-archive-details .wrap, body.akr-live-details .wrap {
+ display:block!important; height:auto!important; min-height:0!important;
+ overflow:visible!important; contain:none!important;
+}
+body.akr-archive-details #rally-view, body.akr-live-details #rally-view {
+ display:block!important; height:auto!important; min-height:0!important;
+ overflow:visible!important; contain:none!important;
+}
+body.akr-archive-details #rally-view[hidden], body.akr-live-details #rally-view[hidden] {display:none!important}
+body.akr-archive-details #rally-view>.panel, body.akr-live-details #rally-view>.panel {
+ display:block!important; height:auto!important; max-height:none!important;
+ overflow:visible!important; flex:none!important;
+}
+body.akr-archive-details #rally-view>.sticky-top,
+body.akr-live-details #rally-view>.sticky-top {
+ position:-webkit-sticky!important; position:sticky!important; top:0!important;
+ z-index:100!important; background:#000!important; isolation:isolate;
+ padding:4px 0 7px!important; margin:0!important;
+ box-shadow:0 5px 12px rgba(0,0,0,.9)!important;
+}
+/* Awaryjne przyklejenie na iOS, jeżeli przeglądarka nie obsłuży sticky. */
+body.akr-archive-details #rally-view>.sticky-top.akr-pin,
+body.akr-live-details #rally-view>.sticky-top.akr-pin {
+ position:fixed!important; top:0!important; z-index:9999!important;
+ box-sizing:border-box!important;
+}
+.akr-pin-placeholder {display:none;height:0}
+.akr-pin-placeholder.akr-pin-on {display:block}
 </style>
-<script id="akr-fixed-controls-script-v3">
+<script id="akr-sticky-final-js">
 (function(){
-  'use strict';
-  const rally=document.getElementById('rally-view');
-  const controls=rally && rally.querySelector(':scope > .sticky-top');
-  if(!rally || !controls) return;
-  const spacer=document.createElement('div');
-  spacer.className='akr-controls-spacer';
-  controls.parentNode.insertBefore(spacer,controls);
-  let locked=false, busy=false;
-  function reset(){
-    locked=false;controls.classList.remove('akr-controls-fixed');
-    controls.style.removeProperty('left');controls.style.removeProperty('width');
-    spacer.classList.remove('akr-controls-spacer-on');
-    spacer.style.height='0px';
-  }
-  function update(){
-    busy=false;
-    const enabled=(document.body.classList.contains('akr-archive-details')||document.body.classList.contains('akr-live-details')) && !rally.hidden && getComputedStyle(rally).display!=='none';
-    if(!enabled){if(locked)reset();return;}
-    const anchor=locked?spacer:controls;
-    const rect=anchor.getBoundingClientRect();
-    const bottom=rally.getBoundingClientRect().bottom;
-    const height=controls.offsetHeight;
-    const shouldLock=rect.top<=0 && bottom>height;
-    if(shouldLock){
-      if(!locked){spacer.style.height=height+'px';spacer.classList.add('akr-controls-spacer-on');locked=true;}
-      const pos=spacer.getBoundingClientRect();
-      controls.style.left=pos.left+'px';controls.style.width=pos.width+'px';
-      controls.classList.add('akr-controls-fixed');
-    }else if(locked){reset();}
-  }
-  function schedule(){if(!busy){busy=true;requestAnimationFrame(update);}}
-  window.addEventListener('scroll',schedule,{passive:true});
-  window.addEventListener('resize',schedule,{passive:true});
-  document.addEventListener('change',schedule);
-  document.addEventListener('click',schedule);
-  const observer=new MutationObserver(schedule);
-  observer.observe(rally,{attributes:true,attributeFilter:['hidden','style','class']});
-  observer.observe(document.body,{attributes:true,attributeFilter:['class']});
-  schedule();
+ 'use strict';
+ const rally=document.getElementById('rally-view');
+ const panel=rally&&rally.querySelector(':scope > .sticky-top');
+ if(!panel)return;
+ const anchor=document.createElement('div');
+ anchor.className='akr-pin-placeholder';
+ panel.parentNode.insertBefore(anchor,panel);
+ let pinned=false;
+ function unpin(){
+   if(!pinned)return;
+   pinned=false;panel.classList.remove('akr-pin');
+   panel.style.removeProperty('left');panel.style.removeProperty('width');
+   anchor.classList.remove('akr-pin-on');anchor.style.height='0px';
+ }
+ function refresh(){
+   const active=(document.body.classList.contains('akr-archive-details')||document.body.classList.contains('akr-live-details'))
+      && !rally.hidden && getComputedStyle(rally).display!=='none';
+   if(!active){unpin();return;}
+   const rect=(pinned?anchor:panel).getBoundingClientRect();
+   const end=rally.getBoundingClientRect().bottom;
+   const height=panel.offsetHeight;
+   if(rect.top<=0 && end>height){
+      if(!pinned){pinned=true;anchor.style.height=height+'px';anchor.classList.add('akr-pin-on');}
+      const pos=anchor.getBoundingClientRect();
+      panel.style.left=pos.left+'px';panel.style.width=pos.width+'px';
+      panel.classList.add('akr-pin');
+   }else unpin();
+ }
+ let scheduled=false;
+ function schedule(){if(scheduled)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;refresh()})}
+ // capture=true obsługuje też scroll elementu body na iOS.
+ window.addEventListener('scroll',schedule,{capture:true,passive:true});
+ document.addEventListener('scroll',schedule,{capture:true,passive:true});
+ window.addEventListener('resize',schedule,{passive:true});
+ document.addEventListener('click',schedule);
+ document.addEventListener('change',schedule);
+ new MutationObserver(schedule).observe(document.body,{attributes:true,attributeFilter:['class']});
+ new MutationObserver(schedule).observe(rally,{attributes:true,attributeFilter:['hidden','style']});
+ schedule();
 })();
 </script>
 </body></html>
