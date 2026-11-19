@@ -901,14 +901,14 @@ body.akr-archive-details #rally-view>.panel, body.akr-live-details #rally-view>.
 body.akr-archive-details #rally-view>.sticky-top,
 body.akr-live-details #rally-view>.sticky-top {
  position:-webkit-sticky!important; position:sticky!important; top:0!important;
- z-index:100!important; background:#000!important; isolation:isolate;
+ z-index:20!important; background:#000!important; isolation:isolate;
  padding:4px 0 7px!important; margin:0!important;
  box-shadow:0 5px 12px rgba(0,0,0,.9)!important;
 }
 /* Awaryjne przyklejenie na iOS, jeżeli przeglądarka nie obsłuży sticky. */
 body.akr-archive-details #rally-view>.sticky-top.akr-pin,
 body.akr-live-details #rally-view>.sticky-top.akr-pin {
- position:fixed!important; top:0!important; z-index:9999!important;
+ position:fixed!important; top:0!important; z-index:20!important;
  box-sizing:border-box!important;
 }
 .akr-pin-placeholder {display:none;height:0}
