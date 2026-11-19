@@ -533,61 +533,6 @@ function selectAkrView(view){
 for(const name of ['event','rally','startlist','announcements','season']){
  document.getElementById('tab-'+name).addEventListener('click',()=>{if(name==='event')window.akrLiveAutoOpen=false;selectAkrView(name)});
 }
-</script><div id="akr-notice-overlay" class="akr-notice-overlay" hidden><section class="akr-notice-dialog" role="dialog" aria-modal="true" aria-labelledby="akr-notice-heading"><h2 id="akr-notice-heading">📢 NOWY KOMUNIKAT</h2><div id="akr-notice-date" class="akr-notice-date"></div><div id="akr-notice-title" class="akr-notice-title"></div><div id="akr-notice-body" class="akr-notice-body"></div><button id="akr-notice-ok" class="akr-notice-ok" type="button">POTWIERDZAM / ZAMKNIJ</button></section></div><script>
-/* AKR: niezależny mechanizm okienka, bez zmian w obliczeniach i API */
-(function(){
- 'use strict';
- const overlay=document.getElementById('akr-notice-overlay');
- const button=document.getElementById('akr-notice-ok');
- const storeKey='akr-notices-confirmed-v2';
- let acknowledged={};
- try{acknowledged=JSON.parse(localStorage.getItem(storeKey)||'{}')||{}}catch(e){acknowledged={}}
- let queue=[],current=null,initialized=false;
- function fingerprint(k){
-  const raw=[k.id??'',k.data??'',k.godzina??'',k.tytul??'',k.tresc??''].map(x=>String(x)).join('\u001f');
-  let hash=2166136261;
-  for(let i=0;i<raw.length;i++){hash^=raw.charCodeAt(i);hash=Math.imul(hash,16777619)}
-  return (hash>>>0).toString(36)+':'+raw.length;
- }
- function showNext(){
-  if(current||!queue.length)return;
-  current=queue.shift();
-  document.getElementById('akr-notice-date').textContent=[current.item.data,current.item.godzina].filter(Boolean).join(' • ');
-  document.getElementById('akr-notice-title').textContent=String(current.item.tytul??'Komunikat organizatora');
-  document.getElementById('akr-notice-body').textContent=String(current.item.tresc??'');
-  overlay.hidden=false;button.focus();
- }
- button.addEventListener('click',function(){
-  if(!current)return;
-  acknowledged[current.id]=true;
-  try{localStorage.setItem(storeKey,JSON.stringify(acknowledged))}catch(e){}
-  current=null;overlay.hidden=true;showNext();
- });
- function update(){
-  if(selectedEvent!=='live')return;
-  if(typeof data==='undefined'||!data)return;
-  const items=Array.isArray(data.komunikaty)?data.komunikaty:[];
-  const queued=new Set(queue.map(x=>x.id));
-  if(current)queued.add(current.id);
-  for(const item of items){
-   if(!item||typeof item!=='object')continue;
-   const id=fingerprint(item);
-   if(!acknowledged[id]&&!queued.has(id)) {queue.push({id,item});queued.add(id)}
-  }
-  initialized=true;
-  showNext();
- }
- // Oryginalny setData wywołuje renderAnnouncements po każdym udanym pobraniu.
- // Rozszerzamy wyłącznie tę funkcję, bez ingerencji w logikę wyników.
- const originalRender=window.renderAnnouncements;
- if(typeof originalRender==='function'){
-  window.renderAnnouncements=function(){originalRender();update()};
- }
- document.getElementById('akr-event-select').addEventListener('change',function(){
-  queue=[];current=null;overlay.hidden=true;
- });
- update();
-})();
 </script><script>
 'use strict';
 /* Roczna 2026: niezależny moduł; nie zmienia funkcji wyników LIVE ani archiwów. */
@@ -957,4 +902,5 @@ body.akr-live-details #rally-view>.sticky-top.akr-pin {
  schedule();
 })();
 </script>
+<script src="/test-v2/akr-komunikaty.js?v=1" defer></script>
 </body></html>
