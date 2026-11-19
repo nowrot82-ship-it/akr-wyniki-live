@@ -203,8 +203,56 @@ function setConnection(message) {
   }
 }
 
+// LISTA STARTOWA — blokada linków do czasu potwierdzenia ustawień.
+// Działa dla przycisku pod plakatem i dla wspólnego hamburgera.
+let startListPublished = false;
+
+function isStartListLink(link) {
+  if (!(link instanceof HTMLAnchorElement)) return false;
+  const label = (link.textContent || "").replace(/\s+/g, " ").trim().toLocaleUpperCase("pl");
+  return link.id === "startlist" || label.includes("LISTA STARTOWA");
+}
+
+function updateStartListLinks() {
+  document.querySelectorAll("a").forEach(link => {
+    if (!isStartListLink(link)) return;
+    link.setAttribute("aria-disabled", String(!startListPublished));
+    link.classList.toggle("akr-startlist-disabled", !startListPublished);
+    if (!startListPublished) link.setAttribute("tabindex", "-1");
+    else link.removeAttribute("tabindex");
+  });
+}
+
+// Przechwycenie kliknięcia przed zwykłą nawigacją.
+document.addEventListener("click", event => {
+  const link = event.target instanceof Element ? event.target.closest("a") : null;
+  if (link && isStartListLink(link) && !startListPublished) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+  }
+}, true);
+
+const startListStyle = document.createElement("style");
+startListStyle.textContent = `
+  a.akr-startlist-disabled {
+    opacity: .42 !important;
+    filter: grayscale(1);
+    cursor: not-allowed !important;
+  }
+`;
+document.head.appendChild(startListStyle);
+
+const startListObserver = new MutationObserver(updateStartListLinks);
+startListObserver.observe(document.body, { childList: true, subtree: true });
+updateStartListLinks();
+
 function renderSettings(payload) {
   const cfg = findSettings(payload);
+
+  // W arkuszu/API potrzebne pole pokaz_liste_startowa.
+  // Przy braku pola nie publikujemy listy przez przypadek.
+  startListPublished = isTrue(cfg.pokaz_liste_startowa);
+  updateStartListLinks();
 
   if (isFalse(cfg.pokaz_rajd)) {
     setConnection(
