@@ -831,4 +831,60 @@ selectAkrView('event');
   }
 })();
 </script>
-<script src="akr-header.js?v=8"></script></body></html>
+<script src="akr-header.js?v=8"></script>
+<style id="akr-fixed-controls-v3">
+/* Wersja mobilna: po dojściu do góry zostaje wyłącznie panel OS / klasa / NA-PO. */
+body.akr-archive-details #rally-view > .sticky-top.akr-controls-fixed,
+body.akr-live-details #rally-view > .sticky-top.akr-controls-fixed {
+  position:fixed!important;top:0!important;z-index:9999!important;
+  margin:0!important;background:#000!important;
+  box-shadow:0 5px 14px #000!important;
+  box-sizing:border-box!important;
+}
+.akr-controls-spacer {display:none;height:0;pointer-events:none}
+.akr-controls-spacer.akr-controls-spacer-on {display:block}
+</style>
+<script id="akr-fixed-controls-script-v3">
+(function(){
+  'use strict';
+  const rally=document.getElementById('rally-view');
+  const controls=rally && rally.querySelector(':scope > .sticky-top');
+  if(!rally || !controls) return;
+  const spacer=document.createElement('div');
+  spacer.className='akr-controls-spacer';
+  controls.parentNode.insertBefore(spacer,controls);
+  let locked=false, busy=false;
+  function reset(){
+    locked=false;controls.classList.remove('akr-controls-fixed');
+    controls.style.removeProperty('left');controls.style.removeProperty('width');
+    spacer.classList.remove('akr-controls-spacer-on');
+    spacer.style.height='0px';
+  }
+  function update(){
+    busy=false;
+    const enabled=(document.body.classList.contains('akr-archive-details')||document.body.classList.contains('akr-live-details')) && !rally.hidden && getComputedStyle(rally).display!=='none';
+    if(!enabled){if(locked)reset();return;}
+    const anchor=locked?spacer:controls;
+    const rect=anchor.getBoundingClientRect();
+    const bottom=rally.getBoundingClientRect().bottom;
+    const height=controls.offsetHeight;
+    const shouldLock=rect.top<=0 && bottom>height;
+    if(shouldLock){
+      if(!locked){spacer.style.height=height+'px';spacer.classList.add('akr-controls-spacer-on');locked=true;}
+      const pos=spacer.getBoundingClientRect();
+      controls.style.left=pos.left+'px';controls.style.width=pos.width+'px';
+      controls.classList.add('akr-controls-fixed');
+    }else if(locked){reset();}
+  }
+  function schedule(){if(!busy){busy=true;requestAnimationFrame(update);}}
+  window.addEventListener('scroll',schedule,{passive:true});
+  window.addEventListener('resize',schedule,{passive:true});
+  document.addEventListener('change',schedule);
+  document.addEventListener('click',schedule);
+  const observer=new MutationObserver(schedule);
+  observer.observe(rally,{attributes:true,attributeFilter:['hidden','style','class']});
+  observer.observe(document.body,{attributes:true,attributeFilter:['class']});
+  schedule();
+})();
+</script>
+</body></html>
