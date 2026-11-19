@@ -1,0 +1,389 @@
+
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Regulamin | AKR WYNIKI LIVE 2.0</title>
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b1220;
+      --panel: #162238;
+      --border: #2b3b54;
+      --text: #edf2fa;
+      --muted: #a9b7cb;
+      --gold: #f5c451;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.75;
+    }
+
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: #101a2b;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-inner {
+      max-width: 1050px;
+      min-height: 76px;
+      margin: auto;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: #25334b;
+      color: var(--gold);
+      font-size: 25px;
+      font-weight: 900;
+    }
+
+    .brand-name {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: .4px;
+    }
+
+    .brand-subtitle {
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 1px;
+    }
+
+    .menu-disabled {
+      width: 46px;
+      height: 46px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #1b2940;
+      color: var(--muted);
+      font-size: 25px;
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    main {
+      max-width: 1050px;
+      margin: 30px auto;
+      padding: 0 16px 50px;
+    }
+
+    .page-heading {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .page-heading h1 {
+      margin: 0 0 6px;
+      color: var(--gold);
+      font-size: clamp(26px, 5vw, 38px);
+    }
+
+    .page-heading p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .document {
+      padding: clamp(20px, 5vw, 48px);
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 15px 35px rgba(0,0,0,.16);
+    }
+
+    .document h1,
+    .document h2,
+    .document h3 {
+      color: var(--gold);
+      line-height: 1.4;
+      overflow-wrap: anywhere;
+    }
+
+    .document h1 {
+      margin: 0 0 26px;
+      font-size: clamp(21px, 4vw, 29px);
+      text-align: center;
+    }
+
+    .document h2 {
+      margin: 34px 0 12px;
+      font-size: 21px;
+    }
+
+    .document h3 {
+      margin: 25px 0 10px;
+      font-size: 18px;
+    }
+
+    .document p {
+      margin: 0 0 15px;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+    }
+
+    .document .akr-list-item {
+      padding-left: 12px;
+    }
+
+    .akr-table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      margin: 20px 0;
+    }
+
+    .document table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .document td {
+      padding: 10px;
+      border: 1px solid #42516a;
+      vertical-align: top;
+    }
+
+    .status {
+      padding: 25px 10px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .status.error {
+      color: #ffb6b6;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      margin-top: 25px;
+    }
+
+    .back-button {
+      display: inline-block;
+      padding: 13px 24px;
+      border-radius: 10px;
+      background: var(--gold);
+      color: #111827;
+      font-weight: 800;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .back-button:hover {
+      background: #ffda7e;
+    }
+
+    footer {
+      padding: 20px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 12px;
+    }
+
+    @media (max-width: 600px) {
+      .header-inner {
+        min-height: 68px;
+        padding: 10px 14px;
+      }
+
+      .brand-mark {
+        width: 42px;
+        height: 42px;
+      }
+
+      .brand-name {
+        font-size: 13px;
+      }
+
+      .document {
+        border-radius: 12px;
+      }
+
+      .document h2 {
+        font-size: 19px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="header">
+    <div class="header-inner">
+
+      <a class="brand" href="/" aria-label="AKR — strona główna">
+        <div class="brand-mark" aria-hidden="true">AKR</div>
+
+        <div>
+          <div class="brand-name">AKR WYNIKI LIVE 2.0</div>
+          <div class="brand-subtitle">REGULAMIN RAJDU</div>
+        </div>
+      </a>
+
+      <button
+        class="menu-disabled"
+        type="button"
+        disabled
+        aria-label="Menu niedostępne"
+        title="Menu niedostępne"
+      >☰</button>
+
+    </div>
+  </header>
+
+  <main>
+
+    <div class="page-heading">
+      <h1>REGULAMIN</h1>
+      <p>Oficjalny regulamin wydarzenia</p>
+    </div>
+
+    <article class="document" aria-label="Treść regulaminu">
+
+      <div
+        id="loading-status"
+        class="status"
+        role="status"
+      >
+        Pobieranie aktualnego regulaminu…
+      </div>
+
+      <div id="regulamin-content" hidden></div>
+
+    </article>
+
+    <div class="actions">
+      <a class="back-button" href="/">
+        ← WRÓĆ DO STRONY GŁÓWNEJ
+      </a>
+    </div>
+
+  </main>
+
+  <footer>
+    AKR WYNIKI LIVE 2.0
+  </footer>
+
+  <script>
+    "use strict";
+
+    const REGULAMIN_API =
+      "https://script.google.com/macros/s/AKfycbxd62C-wX3331UyU5xSfNj5IKnSb4aLs5goRVqQH5kj40jm2FTMh6nBvzVqyFt_vQkt/exec";
+
+    function loadRegulamin() {
+      const status = document.getElementById("loading-status");
+      const content = document.getElementById("regulamin-content");
+
+      const callback =
+        "AKRregulamin_" +
+        Date.now() +
+        "_" +
+        Math.random().toString(36).slice(2, 10);
+
+      const script = document.createElement("script");
+      let finished = false;
+
+      const timer = setTimeout(function () {
+        finish(new Error("Przekroczono czas oczekiwania"));
+      }, 15000);
+
+      function finish(error, data) {
+        if (finished) return;
+
+        finished = true;
+        clearTimeout(timer);
+        script.remove();
+
+        try {
+          delete window[callback];
+        } catch (e) {
+          window[callback] = undefined;
+        }
+
+        if (
+          error ||
+          !data ||
+          data.ok !== true ||
+          typeof data.tresc !== "string"
+        ) {
+          status.textContent =
+            "Nie udało się pobrać regulaminu. " +
+            "Odśwież stronę i spróbuj ponownie.";
+
+          status.classList.add("error");
+          return;
+        }
+
+        if (!data.tresc.trim()) {
+          status.textContent =
+            "Regulamin jest obecnie pusty.";
+          return;
+        }
+
+        // HTML pochodzi z naszego Apps Script,
+        // który zabezpiecza tekst dokumentu.
+        content.innerHTML = data.tresc;
+
+        content.hidden = false;
+        status.hidden = true;
+      }
+
+      window[callback] = function (data) {
+        finish(null, data);
+      };
+
+      script.onerror = function () {
+        finish(new Error("Nie udało się załadować API"));
+      };
+
+      const url = new URL(REGULAMIN_API);
+      url.searchParams.set("callback", callback);
+      url.searchParams.set("t", Date.now());
+
+      script.src = url.href;
+      document.head.appendChild(script);
+    }
+
+    loadRegulamin();
+  </script>
+
+</body>
+</html>
