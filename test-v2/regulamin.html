@@ -7,16 +7,16 @@
 
   <title>Regulamin | AKR WYNIKI LIVE 2.0</title>
 
-  <!-- Oryginalny wspolny naglowek AKR -->
-  <link rel="stylesheet" href="/test-v2/akr-header.css?v=5">
+  <!-- Wspolny naglowek AKR -->
+  <link rel="stylesheet" href="/test-v2/akr-header.css?v=8">
 
   <style>
     :root {
       color-scheme: dark;
       --akr-red: #e32932;
-      --akr-bg: #0b1220;
-      --akr-panel: #162238;
-      --akr-border: #2b3b54;
+      --akr-bg: #000000;
+      --akr-panel: #16191f;
+      --akr-border: #363037;
       --akr-text: #edf2fa;
       --akr-muted: #a9b7cb;
     }
@@ -37,21 +37,44 @@
       line-height: 1.75;
     }
 
-    /* Cienka czerwona linia pod menu */
+    /* =====================================
+       NAGLOWEK - SZEROKOSC JAK TRESC STRONY
+       ===================================== */
 
     #akr-shared-header {
       position: relative;
       z-index: 20;
       border-bottom: 2px solid var(--akr-red);
+      background: #000;
     }
 
-    /* Zachowanie wspolnego menu AKR */
+    /*
+      Na komputerze ograniczamy szerokosc
+      logo i hamburgera do 1050 px.
+
+      Czerwona linia zostaje na cala
+      szerokosc ekranu.
+    */
+
+    #akr-shared-header .akr-topbar {
+      width: 100%;
+      max-width: 1050px;
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 16px;
+      padding-right: 16px;
+      border-bottom: none;
+    }
+
+    /* Menu boczne nadal dziala normalnie */
 
     #akr-shared-header .akr-menu-overlay[hidden] {
       display: none !important;
     }
 
-    /* Glowna zawartosc */
+    /* =====================================
+       ZAWARTOSC REGULAMINU
+       ===================================== */
 
     main {
       max-width: 1050px;
@@ -77,7 +100,9 @@
       font-size: 14px;
     }
 
-    /* Regulamin */
+    /* =====================================
+       DOKUMENT
+       ===================================== */
 
     .document {
       padding: clamp(20px, 5vw, 48px);
@@ -124,7 +149,21 @@
       padding-left: 12px;
     }
 
-    /* Tabele z Google Docs */
+    /* Kolory i pogrubienia z Google Docs
+       sa zachowywane przez Apps Script. */
+
+    .document strong {
+      font-weight: 800;
+    }
+
+    .document a {
+      color: #ff6874;
+      text-decoration: underline;
+    }
+
+    /* =====================================
+       TABELE
+       ===================================== */
 
     .akr-table-wrap {
       width: 100%;
@@ -144,7 +183,13 @@
       vertical-align: top;
     }
 
-    /* Komunikaty */
+    .document td p {
+      margin: 0 0 8px;
+    }
+
+    /* =====================================
+       KOMUNIKATY
+       ===================================== */
 
     .status {
       padding: 25px 10px;
@@ -156,7 +201,9 @@
       color: #ffb6b6;
     }
 
-    /* Powrot do strony glownej */
+    /* =====================================
+       CZERWONY PRZYCISK POWROTU
+       ===================================== */
 
     .actions {
       display: flex;
@@ -193,7 +240,16 @@
       font-size: 12px;
     }
 
-    @media (max-width: 600px) {
+    /* =====================================
+       TELEFONY
+       ===================================== */
+
+    @media (max-width: 640px) {
+      #akr-shared-header .akr-topbar {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+
       main {
         margin-top: 22px;
       }
@@ -211,7 +267,7 @@
 
 <body>
 
-  <!-- Ten element wypelnia wspolny skrypt AKR -->
+  <!-- Oryginalny naglowek AKR -->
   <div id="akr-shared-header"></div>
 
   <main>
@@ -221,7 +277,10 @@
       <p>Oficjalny regulamin wydarzenia</p>
     </div>
 
-    <article class="document" aria-label="Treść regulaminu">
+    <article
+      class="document"
+      aria-label="Treść regulaminu"
+    >
 
       <div
         id="loading-status"
@@ -247,14 +306,14 @@
     AKR WYNIKI LIVE 2.0
   </footer>
 
-  <!-- Oryginalny wspolny skrypt naglowka -->
+  <!-- Oryginalny skrypt naglowka -->
   <script src="/test-v2/akr-header.js?v=5"></script>
 
   <script>
     "use strict";
 
     // =========================================
-    // POPRAWNE LINKI W MENU DLA TEJ PODSTRONY
+    // LINKI NAWIGACJI
     // =========================================
 
     (function fixRegulaminNavigation() {
@@ -285,7 +344,7 @@
 
 
     // =========================================
-    // API REGULAMINU Z GOOGLE DOCS
+    // GOOGLE DOCS - AKR REGULAMIN API
     // =========================================
 
     const REGULAMIN_API =
@@ -293,7 +352,7 @@
 
 
     // =========================================
-    // POBIERANIE AKTUALNEGO REGULAMINU
+    // POBIERANIE REGULAMINU
     // =========================================
 
     function loadRegulamin() {
@@ -356,8 +415,8 @@
           return;
         }
 
-        // HTML generuje nasz Apps Script.
-        // Tekst dokumentu jest tam zabezpieczany.
+        // HTML z Apps Script zawiera
+        // kolory i pogrubienia z Google Docs.
 
         content.innerHTML = data.tresc;
 
