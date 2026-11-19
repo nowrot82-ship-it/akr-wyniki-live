@@ -320,6 +320,8 @@ body.akr-live-details #rally-view>.sticky-top .panel {
 .akr-live-upcoming-notice p{margin:10px 0;color:#ddd;font-size:14px;line-height:1.5}
 .akr-live-upcoming-notice strong{display:block;margin:12px 0 6px;font-size:clamp(18px,4vw,25px);line-height:1.25}
 .akr-live-upcoming-date{font-size:clamp(20px,5vw,29px);font-weight:900;color:#fff}
+.akr-live-home-button{display:block;width:100%;max-width:390px;margin:23px auto 2px;padding:14px 12px;border:1px solid #ff4a56;border-radius:10px;background:#bd1723;color:#fff;text-decoration:none;font-size:14px;font-weight:900;letter-spacing:.3px}
+.akr-live-home-button:hover,.akr-live-home-button:focus-visible{background:#e01e2c;outline:2px solid #fff;outline-offset:3px}
 </style>
 </head><body><div id="akr-shared-header"></div><main class="wrap"><div class="sticky-top"><header class="mast"><h1>WYNIKI LIVE</h1><div id="nazwa-imprezy" class="event-name" hidden></div><small>OFICJALNY SYSTEM WYNIKÓW RAJDU</small><div class="status"><span class="dot"></span><span id="status">Trwa pobieranie danych…</span></div></header><div class="akr-event-picker"><label for="akr-event-select">🏁 WYBIERZ IMPREZĘ</label><select id="akr-event-select" aria-label="Wybierz imprezę"><option value="live">🟢 AKTUALNY RAJD — LIVE</option><option value="archive-wiktoria">🔴 Trwa pobieranie danych…</option><option value="archive-dobrocin">🔴 DOBROCIN BARWACZ CUP — RUNDA V</option><option value="archive-dobrocin-r4">🔴 DOBROCIN BARWACZ CUP — RUNDA IV</option><option value="archive-dobrocin-r3">🔴 DOBROCIN BARWACZ CUP — RUNDA III</option><option value="archive-dobrocin-r2">🔴 DOBROCIN BARWACZ CUP — RUNDA II</option><option value="archive-dobrocin-r1">🔴 DOBROCIN BARWACZ CUP — RUNDA I</option></select></div>
 </div><nav class="view-tabs" aria-label="Wybór widoku"><button type="button" class="view-tab active" id="tab-event" aria-pressed="true">📅 NADCHODZĄCY RAJD<small>Informacje o imprezie</small></button><button type="button" class="view-tab" id="tab-rally" aria-pressed="false">🏁 WYNIKI LIVE<small>Wyniki rajdu</small></button><button type="button" class="view-tab" id="tab-startlist" aria-pressed="false">📋 LISTA STARTOWA<small>Załogi i pojazdy</small></button><button type="button" class="view-tab" id="tab-announcements" aria-pressed="false">📢 KOMUNIKATY<small>Informacje organizatora</small></button><button type="button" class="view-tab" id="tab-season" aria-pressed="false">🏆 KLASYFIKACJA ROCZNA<small>Sezon 2026</small></button></nav><section id="event-view" aria-label="Nadchodzący rajd"><div id="akr-event-content" aria-live="polite"><div class="akr-event-card">Trwa pobieranie danych…</div></div></section><div id="rally-view" hidden><div class="sticky-top"><section class="panel" aria-label="Wybór wyników"><div class="filter-grid"><div><label class="label" for="wybor-os">ODCINEK SPECJALNY</label><select id="wybor-os"><option value="1">OS1</option><option value="2">OS2</option><option value="3">OS3</option><option value="4">OS4</option><option value="5">OS5</option><option value="6">OS6</option></select></div><div><label class="label" for="klasa">KLASA</label><select id="klasa"><option value="">GENERALNA</option></select></div></div><div class="mode"><button type="button" id="na">WYNIK NA OS</button><button type="button" id="po">WYNIK PO OS</button></div></section></div>
@@ -720,6 +722,20 @@ function renderEventSettings(payload){
     return;
   }
   const safe=typeof esc==='function'?esc:(v=>String(v??''));
+  // Gdy LIVE jest wyłączone: wyświetlamy WYŁĄCZNIE zapowiedź i powrót.
+  // Nie dotykamy obliczeń, archiwum ani logiki aktywnych wyników.
+  if(!window.akrLiveResultsEnabled){
+    target.innerHTML='<div class="akr-live-upcoming-notice" role="status">'+
+      '<div class="akr-live-upcoming-icon">🏁</div>'+
+      '<h2>WYNIKI LIVE JESZCZE NIEDOSTĘPNE</h2>'+
+      '<p>Zapraszamy na najbliższą imprezę!</p>'+
+      '<strong>'+safe(cfg.nazwa||'Nadchodzący rajd')+'</strong>'+
+      (cfg.data?'<div class="akr-live-upcoming-date">📅 '+safe(cfg.data)+'</div>':'')+
+      '<p>Wyniki LIVE pojawią się tutaj po ich uruchomieniu przez organizatora.</p>'+
+      '<a class="akr-live-home-button" href="https://akrwyniki.pl/">🏠 WRÓĆ NA STRONĘ GŁÓWNĄ</a>'+
+      '</div>';
+    return;
+  }
   const status=String(cfg.status||'NADCHODZACY').toUpperCase();
   const statusLabel=status==='TRWA'?'RAJD TRWA':status==='ZAKONCZONY'?'RAJD ZAKOŃCZONY':'NADCHODZĄCY RAJD';
   const url=(value)=>{try{const u=new URL(String(value||''));return u.protocol==='https:'?u.href:''}catch(_){return ''}};
@@ -734,17 +750,7 @@ function renderEventSettings(payload){
   if(cfg.wyniki_live===true)actions.push('<button type="button" class="akr-secondary" id="akr-event-results-btn">🏁 WYNIKI LIVE</button>');
   if(cfg.pokaz_liste_zgloszen===true)actions.push('<button type="button" class="akr-secondary" id="akr-event-entries-btn">📋 LISTA ZGŁOSZEŃ</button>');
   const facts=[cfg.data?'📅 '+safe(cfg.data):'',cfg.miejsce?'📍 '+safe(cfg.miejsce):''].filter(Boolean).map(x=>'<span>'+x+'</span>').join('');
-  const liveNotice=cfg.wyniki_live!==true
-    ? '<div class="akr-live-upcoming-notice" role="status">'+
-      '<div class="akr-live-upcoming-icon">🏁</div>'+
-      '<h2>WYNIKI LIVE JESZCZE NIEDOSTĘPNE</h2>'+
-      '<p>Zapraszamy na najbliższą imprezę!</p>'+
-      '<strong>'+safe(cfg.nazwa||'Nadchodzący rajd')+'</strong>'+
-      (cfg.data?'<div class="akr-live-upcoming-date">📅 '+safe(cfg.data)+'</div>':'')+
-      '<p>Wyniki LIVE pojawią się tutaj po ich uruchomieniu przez organizatora.</p>'+
-      '</div>'
-    : '';
-  target.innerHTML=liveNotice+'<div class="akr-event-hero"><div class="akr-event-kicker">'+safe(statusLabel)+'</div><h2>'+safe(cfg.nazwa||'Nadchodzący rajd')+'</h2>'+
+  target.innerHTML='<div class="akr-event-hero"><div class="akr-event-kicker">'+safe(statusLabel)+'</div><h2>'+safe(cfg.nazwa||'Nadchodzący rajd')+'</h2>'+
     (cfg.runda?'<div class="akr-event-round">'+safe(cfg.runda)+'</div>':'')+
     '<div class="akr-event-facts">'+facts+'</div>'+
     (poster?'<img class="akr-event-poster" src="'+safe(poster)+'" alt="Plakat rajdu" loading="lazy">':'')+
