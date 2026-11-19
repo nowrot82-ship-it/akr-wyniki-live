@@ -16,6 +16,10 @@ const ENTRIES_API =
 const REGISTRATION_URL =
   "https://script.google.com/macros/s/AKfycbx9VTIRDZ6wSB58qDzcKuUWZLAB0xrfBymjU-v5_iLAsCoQcpAzfned1NMrAZSGDqzQ/exec";
 
+// NOWY ADRES REGULAMINU AKR
+const REGULATIONS_URL =
+  "https://akrwyniki.pl/test-v2/regulamin.html";
+
 const $ = id => document.getElementById(id);
 
 const esc = value =>
@@ -303,13 +307,14 @@ function renderSettings(payload) {
     $("event-poster").src = poster;
   }
 
-  const rules = safeUrl(cfg.regulamin_url);
+  // REGULAMIN — stały adres naszej podstrony AKR.
+  // Nie nadpisujemy go linkiem z arkusza Google.
   const regulations = $("regulations");
 
-  if (rules && regulations) {
-    regulations.href = rules;
-    regulations.target = "_blank";
-    regulations.rel = "noopener noreferrer";
+  if (regulations) {
+    regulations.href = REGULATIONS_URL;
+    regulations.removeAttribute("target");
+    regulations.removeAttribute("rel");
     regulations.removeAttribute("aria-disabled");
   }
 
@@ -580,17 +585,15 @@ if (entriesButton) {
 }
 
 // REGULAMIN
+// Podpinamy link od razu — bez czekania na API ustawień.
 
 const regulationsLink = $("regulations");
 
 if (regulationsLink) {
-  regulationsLink.addEventListener("click", event => {
-    if (
-      regulationsLink.getAttribute("aria-disabled") === "true"
-    ) {
-      event.preventDefault();
-    }
-  });
+  regulationsLink.href = REGULATIONS_URL;
+  regulationsLink.removeAttribute("target");
+  regulationsLink.removeAttribute("rel");
+  regulationsLink.removeAttribute("aria-disabled");
 }
 
 // AWARYJNE LOGO
