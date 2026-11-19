@@ -7,15 +7,18 @@
 
   <title>Regulamin | AKR WYNIKI LIVE 2.0</title>
 
+  <!-- Oryginalny wspolny naglowek AKR -->
+  <link rel="stylesheet" href="/test-v2/akr-header.css?v=5">
+
   <style>
     :root {
       color-scheme: dark;
-      --bg: #0b1220;
-      --panel: #162238;
-      --border: #2b3b54;
-      --text: #edf2fa;
-      --muted: #a9b7cb;
-      --gold: #f5c451;
+      --akr-red: #e32932;
+      --akr-bg: #0b1220;
+      --akr-panel: #162238;
+      --akr-border: #2b3b54;
+      --akr-text: #edf2fa;
+      --akr-muted: #a9b7cb;
     }
 
     * {
@@ -28,74 +31,27 @@
 
     body {
       margin: 0;
-      background: var(--bg);
-      color: var(--text);
+      background: var(--akr-bg);
+      color: var(--akr-text);
       font-family: Arial, Helvetica, sans-serif;
       line-height: 1.75;
     }
 
-    .header {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      background: #101a2b;
-      border-bottom: 1px solid var(--border);
+    /* Cienka czerwona linia pod menu */
+
+    #akr-shared-header {
+      position: relative;
+      z-index: 20;
+      border-bottom: 2px solid var(--akr-red);
     }
 
-    .header-inner {
-      max-width: 1050px;
-      min-height: 76px;
-      margin: auto;
-      padding: 12px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 15px;
+    /* Zachowanie wspolnego menu AKR */
+
+    #akr-shared-header .akr-menu-overlay[hidden] {
+      display: none !important;
     }
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .brand-mark {
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
-      display: grid;
-      place-items: center;
-      background: #25334b;
-      color: var(--gold);
-      font-size: 25px;
-      font-weight: 900;
-    }
-
-    .brand-name {
-      font-size: 16px;
-      font-weight: 800;
-      letter-spacing: .4px;
-    }
-
-    .brand-subtitle {
-      color: var(--muted);
-      font-size: 11px;
-      letter-spacing: 1px;
-    }
-
-    .menu-disabled {
-      width: 46px;
-      height: 46px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      background: #1b2940;
-      color: var(--muted);
-      font-size: 25px;
-      opacity: .55;
-      cursor: not-allowed;
-    }
+    /* Glowna zawartosc */
 
     main {
       max-width: 1050px;
@@ -110,28 +66,31 @@
 
     .page-heading h1 {
       margin: 0 0 6px;
-      color: var(--gold);
+      color: var(--akr-red);
       font-size: clamp(26px, 5vw, 38px);
+      line-height: 1.3;
     }
 
     .page-heading p {
       margin: 0;
-      color: var(--muted);
+      color: var(--akr-muted);
       font-size: 14px;
     }
 
+    /* Regulamin */
+
     .document {
       padding: clamp(20px, 5vw, 48px);
-      background: var(--panel);
-      border: 1px solid var(--border);
+      background: var(--akr-panel);
+      border: 1px solid var(--akr-border);
       border-radius: 18px;
-      box-shadow: 0 15px 35px rgba(0,0,0,.16);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, .16);
     }
 
     .document h1,
     .document h2,
     .document h3 {
-      color: var(--gold);
+      color: var(--akr-text);
       line-height: 1.4;
       overflow-wrap: anywhere;
     }
@@ -140,11 +99,14 @@
       margin: 0 0 26px;
       font-size: clamp(21px, 4vw, 29px);
       text-align: center;
+      color: var(--akr-red);
     }
 
     .document h2 {
       margin: 34px 0 12px;
       font-size: 21px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(227, 41, 50, .35);
     }
 
     .document h3 {
@@ -161,6 +123,8 @@
     .document .akr-list-item {
       padding-left: 12px;
     }
+
+    /* Tabele z Google Docs */
 
     .akr-table-wrap {
       width: 100%;
@@ -180,57 +144,58 @@
       vertical-align: top;
     }
 
+    /* Komunikaty */
+
     .status {
       padding: 25px 10px;
       text-align: center;
-      color: var(--muted);
+      color: var(--akr-muted);
     }
 
     .status.error {
       color: #ffb6b6;
     }
 
+    /* Powrot do strony glownej */
+
     .actions {
       display: flex;
       justify-content: center;
-      margin-top: 25px;
+      margin-top: 28px;
     }
 
     .back-button {
       display: inline-block;
-      padding: 13px 24px;
+      width: min(100%, 380px);
+      padding: 15px 24px;
+      border: 1px solid #ff555c;
       border-radius: 10px;
-      background: var(--gold);
-      color: #111827;
+      background: var(--akr-red);
+      color: #fff;
       font-weight: 800;
+      font-size: 14px;
+      letter-spacing: .4px;
       text-align: center;
       text-decoration: none;
+      transition: background .2s ease;
     }
 
-    .back-button:hover {
-      background: #ffda7e;
+    .back-button:hover,
+    .back-button:focus-visible {
+      background: #b91e27;
+      color: #fff;
     }
 
     footer {
       padding: 20px;
-      color: var(--muted);
+      color: var(--akr-muted);
       text-align: center;
       font-size: 12px;
     }
 
     @media (max-width: 600px) {
-      .header-inner {
-        min-height: 68px;
-        padding: 10px 14px;
-      }
-
-      .brand-mark {
-        width: 42px;
-        height: 42px;
-      }
-
-      .brand-name {
-        font-size: 13px;
+      main {
+        margin-top: 22px;
       }
 
       .document {
@@ -246,28 +211,8 @@
 
 <body>
 
-  <header class="header">
-    <div class="header-inner">
-
-      <a class="brand" href="/" aria-label="AKR — strona główna">
-        <div class="brand-mark" aria-hidden="true">AKR</div>
-
-        <div>
-          <div class="brand-name">AKR WYNIKI LIVE 2.0</div>
-          <div class="brand-subtitle">REGULAMIN RAJDU</div>
-        </div>
-      </a>
-
-      <button
-        class="menu-disabled"
-        type="button"
-        disabled
-        aria-label="Menu niedostępne"
-        title="Menu niedostępne"
-      >☰</button>
-
-    </div>
-  </header>
+  <!-- Ten element wypelnia wspolny skrypt AKR -->
+  <div id="akr-shared-header"></div>
 
   <main>
 
@@ -302,15 +247,63 @@
     AKR WYNIKI LIVE 2.0
   </footer>
 
+  <!-- Oryginalny wspolny skrypt naglowka -->
+  <script src="/test-v2/akr-header.js?v=5"></script>
+
   <script>
     "use strict";
+
+    // =========================================
+    // POPRAWNE LINKI W MENU DLA TEJ PODSTRONY
+    // =========================================
+
+    (function fixRegulaminNavigation() {
+      const header = document.getElementById(
+        "akr-shared-header"
+      );
+
+      if (!header) return;
+
+      const brand = header.querySelector(".akr-brand");
+
+      if (brand) {
+        brand.href = "/";
+      }
+
+      const menuLinks = header.querySelectorAll(
+        ".akr-menu-panel nav a"
+      );
+
+      menuLinks.forEach(function (link) {
+        const href = link.getAttribute("href");
+
+        if (href === "index.html") {
+          link.href = "/";
+        }
+      });
+    })();
+
+
+    // =========================================
+    // API REGULAMINU Z GOOGLE DOCS
+    // =========================================
 
     const REGULAMIN_API =
       "https://script.google.com/macros/s/AKfycbxd62C-wX3331UyU5xSfNj5IKnSb4aLs5goRVqQH5kj40jm2FTMh6nBvzVqyFt_vQkt/exec";
 
+
+    // =========================================
+    // POBIERANIE AKTUALNEGO REGULAMINU
+    // =========================================
+
     function loadRegulamin() {
-      const status = document.getElementById("loading-status");
-      const content = document.getElementById("regulamin-content");
+      const status = document.getElementById(
+        "loading-status"
+      );
+
+      const content = document.getElementById(
+        "regulamin-content"
+      );
 
       const callback =
         "AKRregulamin_" +
@@ -319,16 +312,21 @@
         Math.random().toString(36).slice(2, 10);
 
       const script = document.createElement("script");
+
       let finished = false;
 
       const timer = setTimeout(function () {
-        finish(new Error("Przekroczono czas oczekiwania"));
+        finish(
+          new Error("Przekroczono czas oczekiwania")
+        );
       }, 15000);
+
 
       function finish(error, data) {
         if (finished) return;
 
         finished = true;
+
         clearTimeout(timer);
         script.remove();
 
@@ -358,31 +356,43 @@
           return;
         }
 
-        // HTML pochodzi z naszego Apps Script,
-        // który zabezpiecza tekst dokumentu.
+        // HTML generuje nasz Apps Script.
+        // Tekst dokumentu jest tam zabezpieczany.
+
         content.innerHTML = data.tresc;
 
         content.hidden = false;
         status.hidden = true;
       }
 
+
       window[callback] = function (data) {
         finish(null, data);
       };
 
       script.onerror = function () {
-        finish(new Error("Nie udało się załadować API"));
+        finish(
+          new Error("Nie udało się załadować API")
+        );
       };
 
       const url = new URL(REGULAMIN_API);
+
       url.searchParams.set("callback", callback);
       url.searchParams.set("t", Date.now());
 
       script.src = url.href;
+
       document.head.appendChild(script);
     }
 
+
+    // =========================================
+    // START
+    // =========================================
+
     loadRegulamin();
+
   </script>
 
 </body>
