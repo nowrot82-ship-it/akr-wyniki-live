@@ -401,6 +401,7 @@ function changeEvent(value){
  if(value!=='live'&&value!=='archive-wiktoria'&&value!=='archive-dobrocin'&&value!=='archive-dobrocin-r4'&&value!=='archive-dobrocin-r3'&&value!=='archive-dobrocin-r2'&&value!=='archive-dobrocin-r1')return;
  // Wybranie dowolnej imprezy zawsze otwiera wyniki tej imprezy, nie roczną.
  selectedEvent=value;
+ window.akrLiveAutoOpen=(value==='live');
  selectAkrView('rally');
  eventGeneration++;
  busy=false;
@@ -475,7 +476,7 @@ function selectAkrView(view){
  }
 }
 for(const name of ['event','rally','startlist','announcements','season']){
- document.getElementById('tab-'+name).addEventListener('click',()=>selectAkrView(name));
+ document.getElementById('tab-'+name).addEventListener('click',()=>{if(name==='event')window.akrLiveAutoOpen=false;selectAkrView(name)});
 }
 </script><div id="akr-notice-overlay" class="akr-notice-overlay" hidden><section class="akr-notice-dialog" role="dialog" aria-modal="true" aria-labelledby="akr-notice-heading"><h2 id="akr-notice-heading">📢 NOWY KOMUNIKAT</h2><div id="akr-notice-date" class="akr-notice-date"></div><div id="akr-notice-title" class="akr-notice-title"></div><div id="akr-notice-body" class="akr-notice-body"></div><button id="akr-notice-ok" class="akr-notice-ok" type="button">POTWIERDZAM / ZAMKNIJ</button></section></div><script>
 /* AKR: niezależny mechanizm okienka, bez zmian w obliczeniach i API */
@@ -648,6 +649,12 @@ function renderEventSettings(payload){
   if(!target)return;
   const cfg=payload&&payload.ustawienia_rajdu;
   window.akrLiveResultsEnabled=Boolean(cfg&&cfg.wyniki_live===true);
+  // Jeśli kibic otworzył WYNIKI LIVE, przełącz widok dopiero po odczycie ustawień z API.
+  // Działa także wtedy, gdy organizator włączy LIVE podczas otwartej strony.
+  if(window.akrLiveAutoOpen && window.akrLiveResultsEnabled &&
+     !document.getElementById('event-view').hidden){
+    selectAkrView('rally');
+  }
   const resultsTab=document.getElementById('tab-rally');
   if(resultsTab)resultsTab.hidden=!window.akrLiveResultsEnabled;
   if(!window.akrLiveResultsEnabled && !document.getElementById('rally-view').hidden)selectAkrView('event');
@@ -768,6 +775,7 @@ selectAkrView('event');
     if (event === 'live') {
       document.getElementById('akr-event-select').value = 'live';
       // Gdy LIVE nie jest jeszcze aktywne, pokaż kartę nadchodzącego rajdu.
+      window.akrLiveAutoOpen = true;
       selectAkrView(window.akrLiveResultsEnabled ? 'rally' : 'event');
     } else {
       document.getElementById('akr-event-select').value = event;
