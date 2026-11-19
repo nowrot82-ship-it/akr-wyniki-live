@@ -61,14 +61,14 @@ function isTrue(value) {
   return value === true ||
     value === 1 ||
     String(value).trim().toLowerCase() === "true" ||
-    String(value).trim().toLowerCase() === "tak";
+    ["tak", "prawda"].includes(String(value).trim().toLowerCase());
 }
 
 function isFalse(value) {
   return value === false ||
     value === 0 ||
     String(value).trim().toLowerCase() === "false" ||
-    String(value).trim().toLowerCase() === "nie";
+    ["nie", "fałsz", "falsz"].includes(String(value).trim().toLowerCase());
 }
 
 function jsonp(endpoint, timeoutMs = 15000) {
