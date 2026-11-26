@@ -1,5 +1,7 @@
 
-/* AKR — wspólne komunikaty, bez ingerencji w system pomiarowy */
+/* AKR — wspólne komunikaty ze zdjęciami,
+   bez ingerencji w system pomiarowy */
+
 (function(){
   'use strict';
 
@@ -15,15 +17,23 @@
   }catch(e){}
 
   const style=document.createElement('style');
+
   style.textContent=`
-    .akr-notice-overlay[hidden]{display:none!important}
+    .akr-notice-overlay[hidden],
+    .akr-notice-photo[hidden],
+    .akr-photo-overlay[hidden]{
+      display:none!important
+    }
+
     .akr-notice-overlay{
       position:fixed;inset:0;z-index:10000;
       background:rgba(0,0,0,.82);
       display:flex;align-items:center;justify-content:center;
       padding:18px
     }
+
     .akr-notice-dialog{
+      box-sizing:border-box;
       background:#171717;
       border:2px solid #d71920;
       border-radius:16px;
@@ -35,26 +45,32 @@
       color:#fff;
       font:15px/1.5 Arial,sans-serif
     }
+
     .akr-notice-dialog h2{
       margin:0 0 12px;font-size:23px
     }
+
     .akr-notice-date{
       color:#ff7d83;font-size:12px;font-weight:800
     }
+
     .akr-notice-title{
       font-size:20px;font-weight:900;margin:8px 0
     }
+
     .akr-notice-body{
       white-space:pre-wrap;
       overflow-wrap:anywhere;
       line-height:1.55
     }
+
     .akr-notice-ok{
       width:100%;margin-top:20px;padding:14px;
       background:#d71920;border:0;border-radius:9px;
       color:#fff;font-size:16px;font-weight:900;
       cursor:pointer
     }
+
     .akr-announcement-card{
       border:1px solid #393939;
       border-radius:12px;
@@ -64,22 +80,132 @@
       padding:13px 15px;
       font:14px/1.6 Arial,sans-serif
     }
+
     .akr-announcement-card time{
       display:block;
       font-size:12px;color:#ff767b;font-weight:800
     }
+
     .akr-announcement-card h3{
       font-size:18px;margin:5px 0 7px
     }
+
     .akr-announcement-card p{
       margin:0;
       white-space:pre-wrap;
       overflow-wrap:anywhere
     }
+
+    /* ZDJĘCIA W KOMUNIKATACH */
+
+    .akr-notice-photo{
+      margin-top:14px;
+      text-align:center
+    }
+
+    .akr-photo-button{
+      display:block;
+      width:100%;
+      padding:0;
+      border:0;
+      background:transparent;
+      cursor:zoom-in;
+      color:#fff;
+      font:inherit
+    }
+
+    .akr-notice-photo img{
+      display:block;
+      width:100%;
+      max-width:650px;
+      max-height:420px;
+      height:auto;
+      object-fit:contain;
+      margin:0 auto;
+      border-radius:10px;
+      background:#101010
+    }
+
+    .akr-notice-dialog .akr-notice-photo img{
+      max-height:340px
+    }
+
+    .akr-photo-hint{
+      display:block;
+      margin-top:7px;
+      font-size:12px;
+      color:#bdbdbd;
+      text-align:center
+    }
+
+    .akr-photo-error{
+      padding:12px;
+      border:1px solid #444;
+      border-radius:8px;
+      color:#bdbdbd;
+      font-size:13px
+    }
+
+    /* POWIĘKSZENIE ZDJĘCIA */
+
+    .akr-photo-overlay{
+      position:fixed;
+      inset:0;
+      z-index:10001;
+      background:rgba(0,0,0,.96);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      box-sizing:border-box;
+      padding:16px;
+      gap:14px
+    }
+
+    .akr-photo-full{
+      display:block;
+      max-width:100%;
+      max-height:80dvh;
+      width:auto;
+      height:auto;
+      object-fit:contain;
+      border-radius:8px
+    }
+
+    .akr-photo-close{
+      padding:12px 26px;
+      background:#d71920;
+      border:0;
+      border-radius:9px;
+      color:#fff;
+      font:900 15px Arial,sans-serif;
+      cursor:pointer
+    }
+
+    @media(max-width:600px){
+      .akr-notice-dialog{
+        padding:17px
+      }
+
+      .akr-notice-photo img{
+        max-height:320px
+      }
+
+      .akr-photo-full{
+        max-height:76dvh
+      }
+    }
   `;
+
   document.head.appendChild(style);
 
+
+  // ==========================================
+  // OKNO NOWEGO KOMUNIKATU
+  // ==========================================
+
   const overlay=document.createElement('div');
+
   overlay.className='akr-notice-overlay';
   overlay.hidden=true;
 
@@ -88,81 +214,288 @@
       role="dialog"
       aria-modal="true"
       aria-labelledby="akr-notice-heading">
-      <h2 id="akr-notice-heading">📢 NOWY KOMUNIKAT</h2>
+
+      <h2 id="akr-notice-heading">
+        📢 NOWY KOMUNIKAT
+      </h2>
+
       <div class="akr-notice-date"></div>
       <div class="akr-notice-title"></div>
       <div class="akr-notice-body"></div>
+
+      <div class="akr-notice-photo" hidden></div>
+
       <button class="akr-notice-ok" type="button">
         POTWIERDZAM / ZAMKNIJ
       </button>
+
     </section>
   `;
 
   document.body.appendChild(overlay);
 
-  const button=overlay.querySelector('button');
+  const button=overlay.querySelector('.akr-notice-ok');
+
   let current=null;
   let latestId=null;
   let latestItems=[];
 
+
+  // ==========================================
+  // OKNO POWIĘKSZENIA ZDJĘCIA
+  // ==========================================
+
+  const photoOverlay=document.createElement('div');
+
+  photoOverlay.className='akr-photo-overlay';
+  photoOverlay.hidden=true;
+
+  photoOverlay.innerHTML=`
+    <img class="akr-photo-full"
+      alt="Powiększone zdjęcie komunikatu">
+
+    <button class="akr-photo-close" type="button">
+      ✕ ZAMKNIJ ZDJĘCIE
+    </button>
+  `;
+
+  photoOverlay.setAttribute('role','dialog');
+  photoOverlay.setAttribute('aria-modal','true');
+  photoOverlay.setAttribute(
+    'aria-label','Zdjęcie komunikatu'
+  );
+
+  document.body.appendChild(photoOverlay);
+
+  const photoFull=photoOverlay.querySelector(
+    '.akr-photo-full'
+  );
+
+  const photoClose=photoOverlay.querySelector(
+    '.akr-photo-close'
+  );
+
+  let photoTrigger=null;
+
+  function openPhoto(url,trigger){
+    if(!safePhoto(url))return;
+
+    photoTrigger=trigger||null;
+    photoFull.src=url;
+    photoOverlay.hidden=false;
+    photoClose.focus();
+  }
+
+  function closePhoto(){
+    photoOverlay.hidden=true;
+    photoFull.removeAttribute('src');
+
+    if(photoTrigger&&photoTrigger.isConnected){
+      photoTrigger.focus();
+    }else if(!overlay.hidden){
+      button.focus();
+    }
+
+    photoTrigger=null;
+  }
+
+  photoClose.addEventListener('click',closePhoto);
+
+  photoOverlay.addEventListener('click',e=>{
+    if(e.target===photoOverlay){
+      closePhoto();
+    }
+  });
+
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape'&&!photoOverlay.hidden){
+      e.preventDefault();
+      closePhoto();
+    }
+  });
+
+
+  // ==========================================
+  // BEZPIECZNY ADRES ZDJĘCIA
+  // ==========================================
+
+  function safePhoto(value){
+    const url=String(value||'').trim();
+
+    if(
+      /^https:\/\/drive\.google\.com\/thumbnail\?id=[A-Za-z0-9_-]+(?:&sz=w\d+)?$/.test(url)
+    ){
+      return url;
+    }
+
+    return '';
+  }
+
+
+  // ==========================================
+  // WYŚWIETLANIE ZDJĘCIA
+  // ==========================================
+
+  function renderPhoto(container,k,lazy){
+    container.replaceChildren();
+
+    const url=safePhoto(k.zdjecie_url);
+
+    container.hidden=!url;
+
+    if(!url)return;
+
+    const photoButton=document.createElement('button');
+
+    photoButton.type='button';
+    photoButton.className='akr-photo-button';
+
+    photoButton.setAttribute(
+      'aria-label','Powiększ zdjęcie komunikatu'
+    );
+
+    const img=document.createElement('img');
+
+    img.alt='Zdjęcie: '+(
+      k.tytul||'Komunikat organizatora'
+    );
+
+    img.loading=lazy?'lazy':'eager';
+    img.decoding='async';
+    img.referrerPolicy='no-referrer';
+
+    const hint=document.createElement('span');
+
+    hint.className='akr-photo-hint';
+    hint.textContent='🔍 Kliknij, aby powiększyć';
+
+    photoButton.append(img,hint);
+
+    photoButton.addEventListener('click',()=>{
+      openPhoto(url,photoButton);
+    });
+
+    img.addEventListener('error',()=>{
+      const error=document.createElement('div');
+
+      error.className='akr-photo-error';
+      error.textContent=
+        'Nie udało się wczytać zdjęcia komunikatu.';
+
+      container.replaceChildren(error);
+    });
+
+    container.appendChild(photoButton);
+
+    img.src=url;
+  }
+
+
+  // ==========================================
+  // IDENTYFIKACJA KOMUNIKATÓW
+  // ==========================================
+
   function fingerprint(k){
-    const raw=[
+    const parts=[
       k.id??'',
       k.data??'',
       k.godzina??'',
       k.tytul??'',
       k.tresc??''
-    ].map(String).join('\u001f');
+    ];
+
+    const photo=safePhoto(k.zdjecie_url);
+
+    // Zachowanie wcześniejszych potwierdzeń
+    // komunikatów bez zdjęć.
+    if(photo){
+      parts.push(photo);
+    }
+
+    const raw=parts.map(String).join('\u001f');
 
     let h=2166136261;
+
     for(let i=0;i<raw.length;i++){
       h^=raw.charCodeAt(i);
       h=Math.imul(h,16777619);
     }
+
     return(h>>>0).toString(36)+':'+raw.length;
   }
 
   function save(){
     try{
-      localStorage.setItem(KEY,JSON.stringify(seen));
+      localStorage.setItem(
+        KEY,JSON.stringify(seen)
+      );
     }catch(e){}
   }
 
+
+  // ==========================================
+  // LISTA KOMUNIKATÓW NA STRONIE GŁÓWNEJ
+  // ==========================================
+
   function renderList(items){
-    const el=document.getElementById('akr-home-announcements');
+    const el=document.getElementById(
+      'akr-home-announcements'
+    );
+
     if(!el)return;
 
     el.replaceChildren();
 
     if(!items.length){
-      el.textContent='Brak opublikowanych komunikatów.';
+      el.textContent=
+        'Brak opublikowanych komunikatów.';
       return;
     }
 
     items.forEach(k=>{
       const article=document.createElement('article');
+
       article.className='akr-announcement-card';
 
       const time=document.createElement('time');
+
       time.textContent=[k.data,k.godzina]
         .filter(Boolean).join(' • ');
 
       const h=document.createElement('h3');
+
       h.textContent=k.tytul||'';
 
       const p=document.createElement('p');
+
       p.textContent=k.tresc||'';
 
-      article.append(time,h,p);
+      const photo=document.createElement('div');
+
+      photo.className='akr-notice-photo';
+
+      renderPhoto(photo,k,true);
+
+      article.append(time,h,p,photo);
+
       el.appendChild(article);
     });
   }
 
+
+  // ==========================================
+  // OBSŁUGA NOWYCH KOMUNIKATÓW
+  // ==========================================
+
   function accept(items){
     if(!Array.isArray(items))return;
 
-    items=items.filter(x=>x&&typeof x==='object');
+    items=items.filter(
+      x=>x&&typeof x==='object'
+    );
+
     latestItems=items;
+
     renderList(items);
 
     if(!items.length){
@@ -181,6 +514,7 @@
     }
 
     save();
+
     latestId=id;
 
     if(current&&current.id!==id){
@@ -196,24 +530,46 @@
           .filter(Boolean).join(' • ');
 
       overlay.querySelector('.akr-notice-title')
-        .textContent=newest.tytul||'Komunikat organizatora';
+        .textContent=newest.tytul||
+          'Komunikat organizatora';
 
       overlay.querySelector('.akr-notice-body')
         .textContent=newest.tresc||'';
 
+      renderPhoto(
+        overlay.querySelector('.akr-notice-photo'),
+        newest,
+        false
+      );
+
       overlay.hidden=false;
-      button.focus();
+
+      if(photoOverlay.hidden){
+        button.focus();
+      }
     }
   }
+
+
+  // ==========================================
+  // POTWIERDZANIE KOMUNIKATÓW
+  // ==========================================
 
   button.addEventListener('click',()=>{
     if(!current)return;
 
     seen[current.id]=true;
+
     save();
+
     current=null;
     overlay.hidden=true;
   });
+
+
+  // ==========================================
+  // POŁĄCZENIE Z API — BEZ ZMIAN
+  // ==========================================
 
   function jsonp(){
     return new Promise((resolve,reject)=>{
@@ -221,6 +577,7 @@
         +Math.floor(Math.random()*100000);
 
       const s=document.createElement('script');
+
       let done=false;
 
       const timeout=setTimeout(
@@ -230,15 +587,23 @@
 
       function finish(e,value){
         if(done)return;
+
         done=true;
+
         clearTimeout(timeout);
+
         delete window[name];
+
         s.remove();
+
         e?reject(e):resolve(value);
       }
 
       window[name]=d=>finish(null,d);
-      s.onerror=()=>finish(new Error('Błąd połączenia'));
+
+      s.onerror=()=>finish(
+        new Error('Błąd połączenia')
+      );
 
       s.src=API+'?callback='+encodeURIComponent(name)
         +'&t='+Date.now();
@@ -255,8 +620,15 @@
       .catch(()=>{});
   }
 
+
+  // ==========================================
+  // AUTOMATYCZNE ODŚWIEŻANIE — CO 30 SEKUND
+  // ==========================================
+
   refresh();
+
   setInterval(refresh,30000);
 
   window.AKRNotices={refresh,accept};
+
 })();
