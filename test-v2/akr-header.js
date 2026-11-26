@@ -1,38 +1,23 @@
-
 /* AKR 2.0 — wspólny nagłówek i menu */
 (function () {
   "use strict";
 
   const mount = document.getElementById("akr-shared-header");
-
   if (!mount) return;
 
   mount.innerHTML = `
     <header class="akr-topbar">
-      <a
-        class="akr-brand"
-        href="index.html"
-        aria-label="AKR WYNIKI LIVE — strona główna"
-      >
-        <img
-          src="../akr-logo-stoper.png?v=5"
-          alt="AKR WYNIKI LIVE — system wyników rajdowych"
-        >
-        <span
-          class="akr-brand-fallback"
-          aria-hidden="true"
-        >
+      <a class="akr-brand" href="/" aria-label="AKR WYNIKI LIVE — strona główna">
+        <img src="/akr-logo-stoper.png?v=5" alt="AKR WYNIKI LIVE — system wyników rajdowych">
+        <span class="akr-brand-fallback" aria-hidden="true">
           AKR <b>WYNIKI LIVE</b>
         </span>
       </a>
 
-      <button
-        class="akr-hamburger"
-        type="button"
+      <button class="akr-hamburger" type="button"
         aria-label="Otwórz menu"
         aria-expanded="false"
-        aria-controls="akr-menu-panel"
-      >
+        aria-controls="akr-menu-panel">
         <span></span>
         <span></span>
         <span></span>
@@ -41,39 +26,40 @@
 
     <div class="akr-menu-overlay" hidden></div>
 
-    <aside
-      class="akr-menu-panel"
+    <aside class="akr-menu-panel"
       id="akr-menu-panel"
       aria-label="Menu nawigacji"
-      aria-hidden="true"
-    >
+      aria-hidden="true">
+
       <div class="akr-menu-top">
         <span>AKR <b>WYNIKI LIVE</b></span>
-        <button
-          type="button"
+        <button type="button"
           class="akr-menu-close"
-          aria-label="Zamknij menu"
-        >×</button>
+          aria-label="Zamknij menu">×</button>
       </div>
 
       <nav>
-        <a href="index.html">
+        <a href="/">
           ⌂ <span>STRONA GŁÓWNA</span><b>❯</b>
         </a>
 
-        <a href="wyniki-dotychczasowe.html">
+        <a href="/test-v2/wyniki-dotychczasowe.html">
           ◷ <span>WYNIKI RAJDÓW</span><b>❯</b>
         </a>
 
-        <a href="wyniki-szczegoly.html?event=live">
+        <a href="/test-v2/wyniki-szczegoly.html?event=live">
           ⚑ <span>WYNIKI LIVE</span><b>❯</b>
         </a>
 
-        <a href="wyniki-szczegoly.html?view=season">
+        <a href="/test-v2/komunikaty.html">
+          📢 <span>KOMUNIKATY ORGANIZATORA</span><b>❯</b>
+        </a>
+
+        <a href="/test-v2/wyniki-szczegoly.html?view=season">
           🏆 <span>KLASYFIKACJA ROCZNA</span><b>❯</b>
         </a>
 
-        <a href="wyniki-dotychczasowe.html#archiwum">
+        <a href="/test-v2/wyniki-dotychczasowe.html#archiwum">
           ▦ <span>ARCHIWUM WYNIKÓW</span><b>❯</b>
         </a>
       </nav>
@@ -141,15 +127,18 @@
     link.addEventListener("click", function () {
       toggle(false);
     });
-  });
 
-  const here =
-    location.pathname.split("/").pop() || "index.html";
+    const target = new URL(link.href, location.href);
 
-  panel.querySelectorAll("a").forEach(function (link) {
-    if (link.getAttribute("href") === here) {
+    const normalize = path =>
+      path.replace(/\/index\.html$/, "/");
+
+    if (
+      normalize(target.pathname) === normalize(location.pathname) &&
+      target.search === location.search &&
+      target.hash === location.hash
+    ) {
       link.setAttribute("aria-current", "page");
     }
   });
 })();
-
